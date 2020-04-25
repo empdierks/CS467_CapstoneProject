@@ -1,0 +1,114 @@
+/* WHOLE PAGE */
+.header {
+    padding: 0.5em 0 0.5em 0;
+    background-color: #f2f2f2;
+    letter-spacing: .3em;
+}
+
+.side-title-text {
+    padding: 0.8em 0 0.1em 0;
+    letter-spacing: .06em;
+}
+.side-explain-text {
+    padding: 0.1em 0 0 0;
+    margin-bottom: 0;
+    font-size: 0.85em;
+    color: darkgrey;
+    line-height: 1.25;
+}
+
+.map-btn {
+    margin: 1em 0 1em 0;
+    letter-spacing: .06em;
+}
+.btn-secondary {
+    background-color: #b3b3b3 !important;
+    border-color: #b3b3b3 !important;
+}
+.btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.clickable {
+    cursor: pointer;
+}
+.not-clickable {
+    cursor: default
+}
+
+
+/* MAP */
+#map-area {
+    padding-top: 4em;
+}
+
+.state-path {
+    stroke: white;
+    stroke-width: 2;
+}
+.state-path.state-default {
+    fill: gainsboro !important;
+    opacity: 1.0 !important;
+}
+
+.city-circle.city-default {
+    fill: mediumaquamarine !important;
+    stroke: #2c8768 !important;
+    stroke-width: 0.25 !important;
+    /* specifies stroke then fill on top */
+    paint-order: stroke !important;
+    opacity: 0.75 !important;
+}
+.city-circle.tech-hub {
+    stroke: aquamarine !important;
+    /* change back to 5 if remove paint-order above */
+    stroke-width: 10 !important;
+}
+
+.tooltip-inner {
+    background-color: dimgrey;
+}
+.tooltip.bs-tooltip-right .arrow:before {
+    border-right-color: dimgrey;
+}
+.tooltip.bs-tooltip-left .arrow:before {
+    border-left-color: dimgrey;
+}
+.tooltip.bs-tooltip-bottom .arrow:before {
+    border-bottom-color: dimgrey;
+}
+.tooltip.bs-tooltip-top .arrow:before {
+    border-top-color: dimgrey;
+}
+
+
+/* LANGUAGE LIST */
+.lang-list-item {
+    list-style-type: none;
+    text-transform: capitalize;
+    /* border: none */
+}
+
+#ul-lang-sublist {
+    padding-left: 2em;
+}
+
+.arrow-icon {
+    color: gainsboro;
+    font-size: .75em;
+    padding-left: 1em;
+}
+
+.list-group-item.sublist-item {
+    word-wrap: break-word;
+    border: none;
+}
+
+.lang-list-item.has-logo {
+    margin-left: 0;
+    padding: 0.25em 0 0.25em 2em;
+    background-size: 1.20em;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
