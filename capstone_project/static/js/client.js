@@ -1,9 +1,8 @@
 // topoJSON data from: https://github.com/scotthmurray/d3-book/tree/master/chapter_14  (original source: https://github.com/topojson/us-atlas licensed by ISC)
 // map creation code modified from: https://github.com/scotthmurray/d3-book/blob/master/chapter_14/02_projection.html   (licensed by CC BY-NC-ND 3.0)
-alert("Welcome to js page");
-console.log("JS loaded")
 
 let createMap = () => {
+    console.log("createMap");
     // create svg element & attach to containing div
     const mapW = 800, mapH = 550;   // std map dims per documentation ( https://github.com/topojson/us-atlas ), trimmed to reduce whitespace
     let mapSvg = d3.select("#map-area")
