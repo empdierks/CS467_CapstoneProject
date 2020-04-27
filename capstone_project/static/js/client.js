@@ -1,8 +1,6 @@
 // topoJSON data from: https://github.com/scotthmurray/d3-book/tree/master/chapter_14  (original source: https://github.com/topojson/us-atlas licensed by ISC)
 // map creation code modified from: https://github.com/scotthmurray/d3-book/blob/master/chapter_14/02_projection.html   (licensed by CC BY-NC-ND 3.0)
-
 let createMap = () => {
-    console.log("createMap");
     // create svg element & attach to containing div
     const mapW = 800, mapH = 550;   // std map dims per documentation ( https://github.com/topojson/us-atlas ), trimmed to reduce whitespace
     let mapSvg = d3.select("#map-area")
@@ -149,7 +147,7 @@ let createCities = (projection) => {
             .attr("r", defaultR)
             .attr("class", "city-circle city-default")
             .classed("tech-hub", (d) => d.hub)
-            .attr("data-toggle", "tooltip")       // initially text content defaults to title attr
+            .attr("data-toggle", "tooltip")       // initially tooltip text content defaults to title attr
             .attr("data-html", "true")
             .attr("data-placement", "top")
             .on("mouseenter", function() {
@@ -322,7 +320,7 @@ let createTechListSubLists = () => {
             .attr("value", (d) => d)
             // add logo svg as bullet
             .style("background-image", (d) => {
-                const iconDir = "./langicons/"                                   // TODO path needs changed if move icons!!
+                const iconDir = static_url + "images/langicons/"                 // Django static url obtained from binding in html file
                 let customIcon = d.toLowerCase().replace(/\s+/g, '') + ".svg";   // lower & strip whitespace
                 if (customIcon === "c#.svg") { customIcon = "csharp.svg" };      // adjust names if special chars
                 if (customIcon === "asp.net.svg") { customIcon = "netcore.svg" };

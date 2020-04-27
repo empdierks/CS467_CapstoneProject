@@ -17,7 +17,6 @@
 
     <title>Capstone</title>
     {% load static %}
-    <!-- script to populate page -->
     <link rel="stylesheet" href="{%static 'css/customstyle.css' %}">
 	</head>
 
@@ -33,22 +32,13 @@
           <!-- middle on desktop, 1st on mobile -->
           <div class="col-md-6 order-md-2 middle-panel">
             <div id="map-area"></div>
-          <!--  <script type="text/javascript">
-              var dataset = [5, 10, 15, 20, 25];
-                d3.select("body").selectAll("p")
-                .data(dataset)
-                .enter()
-                .append("p")
-                .text("New paragraph!");
-              </script>
-            -->
           </div>
           <!-- left on desktop, 2nd on mobile -->
           <div class="col-md-3 order-md-1 side-panel" id="explore-by-loc">
               <div class="side-header">
                   <h4 class="text-center side-title-text">EXPLORE BY LOCATION</h4>
                   <p class="text-justify side-explain-text">Click on a city to view the most popular programming languages in job postings and other job data.</p>
-                  <!-- <p class="text-left side-explain-text">*Cities include major US metros and smaller cities with strong tech presence.</p> -->
+                  <!-- <p class="text-justify side-explain-text">*Cities include major US metros and smaller cities with strong tech presence.</p> -->
                   <div class="text-center">
                     <button type="button" class="btn btn-secondary btn-sm w-50 map-btn" id="show-locs-btn">Show Cities</button>
                   </div>
@@ -71,7 +61,10 @@
       </div>
 
 		<!-- script to populate page -->
-    <script src="{%static 'js/client.js'%}"></script>
+    <script>
+      let static_url = "{% get_static_prefix %}";
+    </script>
+    <script src="{%static 'js/client.js' %}"></script>
 
     <!-- jQuery, Popper.js, JS plugins for Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
