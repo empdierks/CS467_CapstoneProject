@@ -19,6 +19,7 @@ from capstone_app import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('retrieveData/', views.post_models, name='data'),
     path('capstone_app/', include('capstone_app.urls')),
     path('admin/', admin.site.urls),
 ]
