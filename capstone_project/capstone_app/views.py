@@ -35,7 +35,7 @@ def post_models(request):
 
         for key in d:
             if key == 'city__city_name':
-                city_dict['city_name'] = d[key]
+                city_dict['cityName'] = d[key]
             else:
                 for p in pairs:
                     if key in p:
