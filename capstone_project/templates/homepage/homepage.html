@@ -13,6 +13,7 @@
             https://svgporn.com/ by https://github.com/gilbarbara licensed under CC0 v1.0
             https://vectorlogo.zone/ by https://github.com/VectorLogoZone
     -->
+    <!-- icons from https://fontawesome.com/ by https://github.com/FortAwesome/Font-Awesome licensed under CC BY 4.0 -->
     <!-- US Map topoJSON for .svg map creation from https://github.com/topojson/us-atlas by https://github.com/mbostock licensed under ISC -->
 
     <title>Capstone</title>
@@ -27,30 +28,42 @@
         </div>
       </div>
 
-      <div class="container-fluid">
-        <div class="row">
+      <div class="container-fluid">  
+        <div class="row">         
           <!-- middle on desktop, 1st on mobile -->
-          <div class="col-md-6 order-md-2 middle-panel">
+          <div class="col-md-6 order-md-2 middle-panel">   
             <div id="map-area"></div>
-          </div>
+          </div>          
           <!-- left on desktop, 2nd on mobile -->
           <div class="col-md-3 order-md-1 side-panel" id="explore-by-loc">
               <div class="side-header">
                   <h4 class="text-center side-title-text">EXPLORE BY LOCATION</h4>
-                  <p class="text-justify side-explain-text">Click on a city to view the most popular programming languages in job postings and other job data.</p>
-                  <!-- <p class="text-justify side-explain-text">*Cities include major US metros and smaller cities with strong tech presence.</p> -->
+                  <p class="text-justify side-explain-text">
+                    Click on a 
+                    <a tabindex="0" data-toggle="popover" data-trigger="focus" data-content="Cities include major US metros and smaller 
+                    cities with strong tech presence." class="clickable text-with-popover">
+                      city
+                    </a> 
+                    to view the most popular programming languages in job postings and other job data.
+                  </p>
                   <div class="text-center">
                     <button type="button" class="btn btn-secondary btn-sm w-50 map-btn" id="show-locs-btn">Show Cities</button>
                   </div>
               </div>
-              <div class="side-content">
+              <div class="side-content" id="city-data-area">
               </div>
-          </div>
+          </div>          
           <!-- right on desktop, 3rd on mobile -->
           <div class="col-md-3 order-md-3 side-panel" id="explore-by-tech">
               <div class="side-header">
                   <h4 class="text-center side-title-text">EXPLORE BY TECHNOLOGY</h4>
-                  <p class="text-justify side-explain-text">Click on a technology to view the US cities where it is in greatest demand.</p>
+                    <p class="text-justify side-explain-text">
+                      Click on a technology to view the US cities where it is in greatest
+                      <a tabindex="0" class="clickable" data-toggle="popover" data-trigger="focus" data-content="Job counts are the number of job 
+                      postings which explicitly request a specific technology." class="clickable text-with-popover">
+                        demand.
+                      </a>
+                    </p>
                   <div class="text-center">
                     <button type="button" class="btn btn-secondary btn-sm w-50 map-btn" id="tech-reset-btn">Reset Map</button>
                   </div>
@@ -70,6 +83,5 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-
   </body>
 </html>

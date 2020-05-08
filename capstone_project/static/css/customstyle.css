@@ -22,8 +22,8 @@
     letter-spacing: .06em;
 }
 .btn-secondary {
-    background-color: #b3b3b3 !important;
-    border-color: #b3b3b3 !important;
+    background-color: #b3b3b3 !important; 
+    border-color: #b3b3b3 !important;    
 }
 .btn:focus, .btn:active {
     outline: none !important;
@@ -43,7 +43,7 @@
     padding-top: 4em;
 }
 
-.state-path {
+.state-path {   
     stroke: white;
     stroke-width: 2;
 }
@@ -53,7 +53,7 @@
 }
 
 .city-circle.city-default {
-    fill: mediumaquamarine !important;
+    fill: mediumaquamarine !important; 
     stroke: #2c8768 !important;
     stroke-width: 0.25 !important;
     /* specifies stroke then fill on top */
@@ -63,7 +63,7 @@
 .city-circle.tech-hub {
     stroke: aquamarine !important;
     /* change back to 5 if remove paint-order above */
-    stroke-width: 10 !important;
+    stroke-width: 10 !important;   
 }
 
 .tooltip-inner {
@@ -82,16 +82,37 @@
     border-top-color: dimgrey;
 }
 
+/* CITY DATA */
+.city-header {
+    padding: 0.5rem 1.25rem;
+    /* text-transform: uppercase; */
+    letter-spacing: 0.1em;
+}
+
+.list-group-item.legend-item {
+    padding: 0.25em 0.25em
+}
+
+.legend-text {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",
+        Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,
+        "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",
+        "Noto Color Emoji";
+    color: #212529;
+    font-size: 0.8em;
+    font-weight: 400;
+}
+
 
 /* LANGUAGE LIST */
 .lang-list-item {
-    list-style-type: none;
+    list-style-type: none;                            
     text-transform: capitalize;
     /* border: none */
 }
 
 #ul-lang-sublist {
-    padding-left: 2em;
+    padding: 0.25em 0 0 2em;
 }
 
 .arrow-icon {
@@ -112,3 +133,4 @@
     background-repeat: no-repeat;
     background-position: left center;
 }
+

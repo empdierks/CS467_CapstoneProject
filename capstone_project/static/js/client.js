@@ -1,3 +1,4 @@
+
 // topoJSON data from: https://github.com/scotthmurray/d3-book/tree/master/chapter_14  (original source: https://github.com/topojson/us-atlas licensed by ISC)
 // map creation code modified from: https://github.com/scotthmurray/d3-book/blob/master/chapter_14/02_projection.html   (licensed by CC BY-NC-ND 3.0)
 let createMap = () => {
@@ -5,9 +6,9 @@ let createMap = () => {
     const mapW = 800, mapH = 550;   // std map dims per documentation ( https://github.com/topojson/us-atlas ), trimmed to reduce whitespace
     let mapSvg = d3.select("#map-area")
                    .append("svg")
-                        .attr("preserveAspectRatio", "xMinYMin meet")    // allows responsive resize of svg
-                        .attr("viewBox", `0 0 ${mapW} ${mapH}`)         // use std dims to define ratio
-                        .attr("id", "us-map-svg");
+                      .attr("preserveAspectRatio", "xMinYMin meet")    // allows responsive resize of svg
+                      .attr("viewBox", `0 0 ${mapW} ${mapH}`)         // use std dims to define ratio
+                      .attr("id", "svg-us-map");
 
     // define map projection
     let projection = d3.geoAlbersUsa()
@@ -89,7 +90,7 @@ let createMap = () => {
 
 
 const defaultR = 10;
-let createCities = (projection) => {
+let createCities = (projection, citiesData) => {
     let cities = [
         { city:"Ann Arbor", state:"Michigan", lat:42.280827, lon:-83.743034, hub:0 },
         { city:"Atlanta", state:"Georgia", lat:33.74855, lon:-84.391502, hub:0 },
@@ -104,7 +105,6 @@ let createCities = (projection) => {
         { city:"Corvallis", state:"Oregon", lat:44.566667, lon:-123.283333, hub:0 },
         { city:"Dallas", state:"Texas", lat:32.78306, lon:-96.80667, hub:0 },
         { city:"Detroit", state:"Michigan", lat:42.33143, lon:-83.04575, hub:0 },
-        // { city:"Durham", state:"North Carolina", lat:35.99403, lon:-78.89862, hub:0 },
         { city:"Fort Collins", state:"Colorado", lat:40.58526, lon:-105.08442, hub:0 },
         { city:"Houston", state:"Texas", lat:29.76045, lon:-95.369784, hub:0 },
         { city:"Ithaca", state:"New York", lat:42.44063, lon:-76.49661, hub:0 },
@@ -132,38 +132,328 @@ let createCities = (projection) => {
         { city:"Washington, D.C.", state:"District of Columbia", lat:38.89511, lon:-77.03637, hub:1 },
     ];
 
-    d3.select("#us-map-svg")
+    // create city circles
+    d3.select("#svg-us-map")
       .selectAll("circle")
       .data(cities)
       .enter()
       .append("circle")
-            .attr("value", (d) => d.city)
-            .attr("title", (d) => d.city)
-            .attr("cx", (d) => projection([d.lon, d.lat])[0])
-            .attr("cy", (d) => projection([d.lon, d.lat])[1])
-            .attr("r", defaultR)
-            .attr("class", "city-circle city-default")
-            .classed("tech-hub", (d) => d.hub)
-            .attr("data-toggle", "tooltip")       // initially tooltip text content defaults to title attr
-            .attr("data-html", "true")
-            .attr("data-placement", "top")
-            .on("mouseenter", function() {
-                d3.select(this)
-                  .transition()
-                    .duration(200)
-                    .attr("r", defaultR * 1.5)
-            })
-            .on("mouseleave", function() {
-                d3.select(this)
-                  .transition()
-                    .duration(200)
-                    .attr("r", defaultR)
-            })
-      .exit().remove();
+          .attr("value", (d) => d.city)
+          .attr("title", (d) => d.city)
+          .attr("cx", (d) => projection([d.lon, d.lat])[0])
+          .attr("cy", (d) => projection([d.lon, d.lat])[1])
+          .attr("r", defaultR)
+          .attr("class", "city-circle city-default")
+          .classed("tech-hub", (d) => d.hub)    // if hub     
+          .attr("data-toggle", "tooltip")       // tooltip text content initially defaults to title attr
+          .attr("data-html", "true")
+          .attr("data-placement", "top")
+          .on("mouseenter", function() {                
+              d3.select(this)
+                .transition()
+                  .duration(200)
+                  .attr("r", defaultR * 1.5) 
+          })
+          .on("mouseleave", function() {                
+              d3.select(this)
+                .transition()
+                  .duration(200)
+                  .attr("r", defaultR) 
+          })
+
+          .on("click", (d) => {
+              showCityData(d.city, citiesData);
+              // animate?      
+          })            
+      .exit().remove(); 
 
     // hide all cities by default
     d3.selectAll(".city-circle")
       .attr("visibility", "hidden");
+};
+
+// resets map styling to defaults; cities hidden
+let resetMap = () => {
+    // reset states
+    d3.selectAll(".state-path")
+      .classed("state-default", true);
+
+    // reset cities
+    d3.selectAll(".city-circle")
+      .attr("r", defaultR)
+      .attr("data-original-title", (d) => d.city)    // restore tooltip to city name only
+      .classed("city-default", true)
+      .classed("tech-hub", (d) => d.hub)
+      .attr("visibility", "hidden");
+};
+
+// button to reset map styling & make cities visible for selection
+let setupShowLocsBtn = () => {
+    d3.select("#show-locs-btn")
+      .on("click", () => {
+          resetMap();
+          d3.selectAll(".city-circle")
+            .attr("visibility", "visible");
+      })
+};
+
+
+// button to reset map styling & remove any currently highlighted cities/states/tooltip data
+let setupTechResetMapBtn = () => {
+    d3.select("#tech-reset-btn")
+      .on("click", () => {
+          resetMap();
+          d3.selectAll("#ul-lang-sublist .sublist-item")  // remove any text bolding (indicating selection) from language menu
+            .classed("font-weight-bolder", false);
+      })
+};
+
+
+// explore-by-tech menu (as list): top level tech categories
+let createTechListCats = () => {  
+    d3.select("#lang-list-area")
+       // div container for entire menu 
+      .append("div")
+            .attr("id", "div-whole-lang-list")                     
+       // top-level list items (category names)
+      .append("ul")
+          .attr("class", "list-group")
+      .selectAll("li")
+      .data([...new Set(langFull.map((obj) => obj.category))])   // distinct set of tech categories (language, framework, etc.)
+      .enter()
+      .append("li")
+          .text((d) => `${d}s`)
+          .attr("class", "list-group-item lang-list-item clickable")
+          .attr("value", (d) => d)
+          .attr("data-toggle","collapse")                        // bootstrap collapse effect
+          .attr("data-target", (d) => "#div-lang-sublist" + d)   // collapse matching div when toggled
+      .append("i")
+          .attr("class", "fas fa-chevron-right arrow-icon")
+      .exit().remove();
+}
+
+
+// explore-by-tech menu (as list): sublists of languages, frameworks, etc. within each category
+let createTechListSubLists = (citiesData) => {
+    d3.select("#lang-list-area").selectAll("li")
+        // div container for sublist (for smoother collapse)
+        .append("div")                                               // contains sublist for smoother collapse effect
+            .attr("id", (d) => "div-lang-sublist" + d)               // d still refers to tech categories
+            .attr("class", "container-fluid" )
+            .attr("class", (d) => (d === "language") ? "collapse show" : "collapse" )    // only Languages section uncollapsed by default
+            .attr("data-parent", "#div-whole-lang-list")             // collapse all other sections when 1 opened
+        // sublist items
+        .append("ul")
+            .attr("id", "ul-lang-sublist")
+            .attr("class", "list-unstyled row not-clickable")
+            .on("click", () => {                                    // stop click on sublist itself from toggling sublist closed
+                d3.event.preventDefault();
+                d3.event.stopPropagation();
+            })
+        .selectAll("li")
+        .data((d) => langFull.filter((obj) => obj.category === d)   // get only tech objs from current category
+                             .map((obj) => obj.name)                // array of tech names in category
+                             .sort()                               
+        )                              
+        .enter()
+        .append("li")
+            .text((d) => d)
+            .attr("class", "list-group-item list-group-item-action col-sm-6 lang-list-item sublist-item has-logo clickable")
+            .attr("value", (d) => d)
+            // add logo svg as list item "bullet"
+            .style("background-image", (d) => {                                  
+                const iconDir = static_url + "images/langicons/"                 // Django static url obtained from binding in html file
+                let customIcon = d.toLowerCase().replace(/\s+/g, '') + ".svg";   // lower & strip whitespace
+                if (customIcon === "c#.svg") { customIcon = "csharp.svg" };   
+                if (customIcon === "asp.net.svg") { customIcon = "netcore.svg" };
+                return `url(${iconDir}${customIcon})`;
+            })
+            .on("click", function(d) {
+                d3.selectAll("#ul-lang-sublist .sublist-item")
+                  .classed("font-weight-bolder", false);
+                d3.select(this)
+                  .classed("font-weight-bolder", true);
+
+                showTopCities(d, citiesData);
+            })
+        .exit().remove();
+};
+
+
+// gets top cities for specified tech, highlights city & corresponding state and displays counts w/in tooltip
+let showTopCities = (techName, citiesData) => {
+    resetMap();
+
+    const numCities = 5;    
+    let citiesDataByLangPop = citiesData.slice(0)                                                                // don't sort in place!!  
+                                        .sort((a, b) => b.langCounts[techName] - a.langCounts[techName])         // sort desc by specified techName count
+                                        .slice(0, numCities);                                                    // keep top cities only
+    let topCities = citiesDataByLangPop.map((obj) => ({ cityName:obj.cityName, langCount:obj.langCounts[techName]})); // create array of city, count objs: [ {cityName:"Ann Arbor", langCount:145}, ... ]
+    // for (i = topCities.length - 1; i >= 0; i--) {                           // drop cities w/ 0 counts?
+        // if (topCities[i].langCount === 0)
+            // topCities.pop();
+    // }
+    
+    if (topCities.length) {
+        let langColor = langFull.find((obj) => obj.name === techName)
+                                .color;                                     // get lang color -- done here so not repeated for every top city
+         
+        d3.selectAll(".city-circle")           
+          .filter((d) => topCities.map((c) => c.cityName).includes(d.city))   // if current city on top cities list
+          .classed("city-default", false)             
+          .classed("tech-hub", false)
+          .attr("visibility", "true")
+          .style("fill", langColor) 
+          .style("opacity", 0.75)
+          .attr("data-original-title", (d,i) => {                           // change tooltip to include job counts for each city              
+              let topCity = topCities.find((c) => c.cityName === d.city);   // get obj where cityName corresponds to current city in data
+              return `${topCity.cityName}<br /><b>${topCity.langCount}</b> jobs`;  // use html in tooltip to create linebreak
+          })
+          //turn onclick off?
+          .transition()
+              .duration(300)
+              .attr("r", 2 * defaultR)
+          .transition()
+              .duration(300)
+              .attr("r", defaultR)
+          .each( function(d) {                                              // highlight corresponding state for each city
+                d3.select(".state-path[value='" + d.state + "']")
+                    .classed("state-default", false)
+                    .style("fill", langColor)
+                    .style("opacity", "0.3")
+                    .style("filter", "saturate(80%)")
+          });
+    }
+    
+    // else display message re: no jobs in any city??
+};
+
+
+// create unchanging elements in city data area
+let createCityDataArea = () => {     
+    let cityDataArea = d3.select("#city-data-area")
+                             .attr("class", "card");
+    
+    // header (city name)    
+    cityDataArea.append("h6")
+                    .attr("id", "city-data-header")
+                    .attr("class", "card-header text-center city-header");
+    
+    // // one or separate card bodies?
+    // cityDataArea.append("div")
+        // .attr("id", "div-all-city-data")
+        // .attr("class", "card-body");
+        // // then would select this and add only card-text and images?
+    
+    // first info section
+    cityDataArea.append("div")
+                    .attr("class", "card-body")
+                .append("p")
+                    .attr("id", "city-data-one")  // change id when know contents
+                    .attr("class", "card-text text-left");
+    
+    // div container for all charts?? (TODO -- if more than 1? -- otherwise combinet his div and below)
+    let chartsArea = cityDataArea.append("div")
+                                 .attr("class", "container-fluid card-body border-top");
+    
+    // div container for language popularity chart
+    let langPopChartArea = chartsArea.append("div")
+                                     .attr("id", "div-lang-pop-chart-area");                                   
+    // chart title
+    langPopChartArea.append("p")
+                        .attr("class", "card-text text-left")
+                        .html("Language Popularity");    
+    // row for side-by-side chart & legend
+    let langChartRow = langPopChartArea.append("div")
+                                       .attr("class", "row");    
+    // div & svg containers for donut chart
+    const chartW = 300, chartH = 300; 
+    langChartRow.append("div")
+                  .attr("id", "div-lang-pop-chart")
+                  .attr("class", "col-sm-6")
+                .append("svg")
+                  .attr("id", "svg-lang-pop-chart")
+                  .attr("preserveAspectRatio", "xMinYMin meet")                           // allows responsive resize of svg
+                  .attr("viewBox", `${-chartW/2}, ${-chartH/2}, ${chartW}, ${chartH}`);   // center??   
+    // div container for legend
+    langChartRow.append("div")
+                  .attr("id", "div-lang-pop-legend")
+                  .attr("class", "col-sm-6");
+};
+
+
+// only update contents of city data
+let showCityData = (cityName, citiesData) => {
+    
+    // TODO -- add transitions to all?
+    
+    // get data for current city 
+    let currCityObj = citiesData.find((obj) => obj.cityName === cityName);
+    
+    d3.select("#city-data-header")
+      .html(cityName);
+       
+    d3.select("#city-data-one")
+      .html("Some Data"); 
+      
+    // pretend sorted data for donut chart -- TODO replace
+    let topTechs = [
+        { name:"Python", count:19 },
+        { name:"JavaScript", count:14 },
+        { name:"HTML-CSS", count:12 },
+        { name:"Java", count:8 },
+        { name:"C#", count:4 }
+    ];
+    
+    // lang pop chart
+    const colorScheme = d3.scaleOrdinal(d3.schemeDark2); // color scheme
+    const chartW = 300, chartH = 300;                    // initial size same as viewbox dims in createCityDataArea 
+    const chartR = chartW/2;                      
+    // generate angles
+    let donutAngles = d3.pie()                           
+                      .value((d) => d.count)
+                      .padAngle(.03)
+                      (topTechs);
+    // generate arcs
+    let donutArc = d3.arc()                             
+                     .innerRadius(chartR * 0.67)
+                     .outerRadius(chartR);
+    // draw wedge paths
+    let langPopChart = d3.select("#svg-lang-pop-chart")  
+      .selectAll("path")
+      .data(donutAngles)
+      .enter()
+      .append("path")
+          .attr("d", donutArc)
+          .attr("class", "donut-wedge-path")
+          .attr("fill", (d,i) => colorScheme(i))           
+          // use css for more styling?
+          // animation from: http://www.adeveloperdiary.com/d3-js/create-a-simple-donut-chart-using-d3-js/   NOT WORKING
+          // .transition()
+            // .duration(1000)
+            // .selectAll("path") -- don't need??
+            // .attrTween("d", (d) => {
+                // let interpolate = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+                // return ((t) => donutArc(interpolate(t)));
+            // })
+      .exit().remove();            
+    // console.log(d3.select("#svg-lang-pop-chart path").data());
+    
+    // lang pop legend    
+    d3.select("#div-lang-pop-legend")
+      .append("ul")
+          .attr("class", "list-group")
+      .selectAll("i")
+      .data(topTechs)
+      .enter()
+      .append("i")
+          .attr("class", "fas fa-square list-group-item legend-item")
+          .style("color", (d,i) => colorScheme(i))
+      .append("span")
+          .classed("fas fa-square", false)
+          .attr("class", "legend-text")
+          .html((d) => "&nbsp;&nbsp;" + `${d.name}`);
+    
 };
 
 
@@ -212,193 +502,27 @@ const langFull = [
     { name:"SQLite", category:"database", color:"#49A6dE", sector:[] },
 ];
 
-// returns alphabetized array of distinct languages from master list given category  -- TODO use built in methods instead
-let returnLangs = (techCat, listToCheck) => {
-    arr = [];
-
-    for (let o of listToCheck) {
-        if (o.category === techCat && !arr.includes(o.name)) {
-            arr.push(o.name);
-        }
-    }
-    arr.sort();   // alpha asc
-
-    return arr;
-};
-
-
-// resets map styling to defaults; cities hidden
-let resetMap = () => {
-    // reset states
-    d3.selectAll(".state-path")
-      .classed("state-default", true);
-
-    // reset cities
-    d3.selectAll(".city-circle")
-      .attr("r", defaultR)
-      .attr("data-original-title", (d) => d.city)    // restore tooltip to city name only
-      .classed("city-default", true)
-      .classed("tech-hub", (d) => d.hub)
-      .attr("visibility", "hidden");
-};
-
-// button to reset map styling & make cities visible for selection
-let setupShowLocsBtn = () => {
-    d3.select("#show-locs-btn")
-      .on("click", () => {
-          resetMap();
-          d3.selectAll(".city-circle")
-            .attr("visibility", "visible");
-      })
-};
-
-
-// button to reset map styling & remove any currently highlighted cities/states/tooltip data
-let setupTechResetMapBtn = () => {
-    d3.select("#tech-reset-btn")
-      .on("click", () => {
-          resetMap();
-          d3.selectAll("#ul-lang-sublist .sublist-item")  // remove any text bolding (indicating selection) from language menu
-            .classed("font-weight-bolder", false);
-      })
-};
-
-
-// explore by tech menu (as list): top level tech categories
-let createTechListCats = () => {  
-    d3.select("#lang-list-area")
-        .append("div")
-            .attr("id", "div-whole-lang-list")                     // div to contain entire list for bootstrap accordian collapse
-
-        .append("ul")
-            .attr("class", "list-group")
-
-        .selectAll("li")
-        .data([...new Set(langFull.map(item => item.category))])   // distinct set of categories (language, framework, etc.) -- no nesting
-        .enter()
-        .append("li")
-            .text((d) => `${d}s`)
-            .attr("class", "list-group-item lang-list-item clickable")
-            .attr("value", (d) => d)
-            .attr("data-toggle","collapse")                        // bootstrap collapse effect
-            .attr("data-target", (d) => "#div-lang-sublist" + d)   // collapse matching div when toggled
-        .append("i")
-            .attr("class", "fas fa-chevron-right arrow-icon")      // arrow icon
-        .exit().remove();
-}
-
-
-// explore by tech menu (as list): sublists of languages, frameworks, etc. within each category
-let createTechListSubLists = (citiesData) => {
-    d3.select("#lang-list-area").selectAll("li")
-        .append("div")                                               // contains sublist for smoother collapse effect
-            .attr("id", (d) => "div-lang-sublist" + d)               // d still refers to tech categories
-            .attr("class", "container-fluid" )
-            .attr("class", (d) => (d === "language") ? "collapse show" : "collapse" )    // only Languages section uncollapsed by default
-            .attr("data-parent", "#div-whole-lang-list")             // collapse all other sections when 1 opened
-
-        .append("ul")
-            .attr("id", "ul-lang-sublist")
-            .attr("class", "list-unstyled row not-clickable")
-            .on("click", () => {                                    // stop click on sublist itself from toggling sublist closed
-                d3.event.preventDefault();
-                d3.event.stopPropagation();
-            })
-
-        .selectAll("li")
-        .data((d) => returnLangs(d, langFull))                      // d passed is still tech categories (inherited)
-        .enter()
-        .append("li")
-            .text((d) => d)
-            .attr("class", "list-group-item list-group-item-action col-sm-6 lang-list-item sublist-item has-logo clickable")
-            .attr("value", (d) => d)
-            // add logo svg as bullet
-            .style("background-image", (d) => {
-                const iconDir = static_url + "images/langicons/"                 // Django static url obtained from binding in html file
-                let customIcon = d.toLowerCase().replace(/\s+/g, '') + ".svg";   // lower & strip whitespace
-                if (customIcon === "c#.svg") { customIcon = "csharp.svg" };      // adjust names if special chars
-                if (customIcon === "asp.net.svg") { customIcon = "netcore.svg" };
-                return `url(${iconDir}${customIcon})`;
-            })
-            .on("click", function(d) {
-                d3.selectAll("#ul-lang-sublist .sublist-item")
-                  .classed("font-weight-bolder", false);
-                d3.select(this)
-                  .classed("font-weight-bolder", true);     // bold selected tech in list
-
-                showTopCities(d, citiesData);
-            })
-        .exit().remove();
-};
-
-
-// gets top cities for specified tech, highlights city & corresponding state and displays counts w/in tooltip
-let showTopCities = (techName, citiesData) => {
-    // return all cities & states to default styling & hide cities
-    resetMap();
-
-    // get top 5 cities    
-    const numCities = 5;
-    let citiesDataByLangPop = citiesData.slice(0)       
-                                        .sort((a, b) => b["langCounts"][techName] - a["langCounts"][techName]);   // sort desc by specified techName count    
-    
-    let topCities = citiesDataByLangPop.map((c) => ({ cityName:c.city_name, langCount:c["langCounts"][techName]})) // create array of objs of top 5 cities & counts: [ {cityName:"Ann Arbor", langCount:145}, ... ]
-                                       .slice(0,numCities);
-    // for (i = topCities.length - 1; i >= 0; i--) {                           // drop cities w/ 0 counts?
-        // if (topCities[i].langCount === 0)
-            // topCities.pop();
-    // }
-    
-    // create top city circles & highlight corresponding states
-    if (topCities.length) {
-        let langColor = langFull.find((obj) => obj.name === techName)
-                                .color;                                     // get lang color -- done here so not repeated for every top city
-         
-        d3.selectAll(".city-circle")           
-          .filter((d) => topCities.map(c => c.cityName).includes(d.city))   // if current city on top cities list
-          .classed("city-default", false)             
-          .classed("tech-hub", false)
-          .attr("visibility", "true")
-          .style("fill", langColor) 
-          .style("opacity", 0.75)
-          .attr("data-original-title", (d,i) => {                           // change tooltip to include job counts for each city              
-              let topCity = topCities.find((c) => c.cityName === d.city);   // get obj where cityName corresponds to current city in data
-              return `${topCity.cityName}<br /><b>${topCity.langCount}</b> jobs`;  // use html in tooltip to create linebreak
-          })
-          //turn onclick off?
-          .transition()
-            .duration(300)
-            .attr("r", 2 * defaultR)
-          .transition()
-            .duration(300)
-            .attr("r", defaultR)
-          .each( function(d) {                                              // highlight corresponding state for each city
-                d3.select(".state-path[value='" + d.state + "']")
-                  .classed("state-default", false)
-                  .style("fill", langColor)
-                  .style("opacity", "0.3")
-                  .style("filter", "saturate(80%)")
-          });
-    }
-    
-    // else display message re: no jobs in any city??
-};
-
 (async () => {
     // get city data
     const resp = await fetch("/retrieveData");
     const citiesData = await resp.json();
+    // console.log(citiesData);
+    // console.log(citiesData.map((obj) => obj.cityName).sort());
     
     // populate page with menus & visuals
     let mapProjection = createMap();
-    createCities(mapProjection);
+    createCities(mapProjection, citiesData);   
     setupShowLocsBtn();
     setupTechResetMapBtn();
     createTechListCats();
     createTechListSubLists(citiesData);
-    
-    // initialize Bootstrap opt-ins
+ 
+    const defaultCity = "Corvallis";
+    createCityDataArea();
+    showCityData(defaultCity, citiesData);
+
     $(document).ready( () => {
-        $( () => { $('[data-toggle="tooltip"]').tooltip() } )
+        $( () => { $('[data-toggle="tooltip"]').tooltip() } ) 
+        $( () => { $('[data-toggle="popover"]').popover() } )       
     });
 })();
