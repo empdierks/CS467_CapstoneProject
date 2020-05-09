@@ -6,7 +6,7 @@ let createMap = () => {
     
     // no jobs in any city error message 
     mapArea.append("p")
-           .html("No jobs for any language!")
+           .html("No jobs in any city!")
            .attr("id","top-cities-error-msg")
            .attr("class", "text-center invisible error-msg");      // not visible by default; use Bootstrap class because overrides manual setting
     
@@ -467,10 +467,10 @@ let showCityData = (cityName, citiesData) => {
                          .innerRadius(chartR * 0.67)
                          .outerRadius(chartR);
         // draw wedge paths
-        let langPopChart = d3.select("#svg-lang-pop-chart")
-        langPopChart.selectAll("path")
+        let langPopChart = d3.select("#svg-lang-pop-chart");
+        langPopChart.selectAll("path")     // completely remove existing paths b/c enter-update-exit hangs on to some old wedges
                     .remove();
-        langPopChart.selectAll("path")
+        langPopChart.selectAll("path")     // reselect to create new
                     .data(donutAngles)
                     .enter()
                     .append("path")
@@ -484,27 +484,22 @@ let showCityData = (cityName, citiesData) => {
                             .attrTween("d", (d) => {
                                 let interpolate = d3.interpolate({startAngle: 0, endAngle: 0}, d);
                                 return ((t) => donutArc(interpolate(t)));
-                            });
-                            
-        console.log(d3.select(".donut-wedge-path").data());
+                            });                           
+        // console.log(d3.select(".donut-wedge-path").data());    
         
-        // lang pop legend    
-        let langPopLegend = d3.select("#ul-lang-pop-legend");
-        langPopLegend.selectAll("i")
-                     .remove();
-        langPopLegend.selectAll("span")
-                     .remove();
-        langPopLegend.selectAll("i")  
-              .data(topTechs)
-              .enter()
-              .append("i")
-                  .attr("class", "list-group-item border-0 fas fa-square legend-item")
-                  // .style("color", (d,i) => colorScheme(i))
-                  .style("color", (d) => langFull.find((obj) => obj.name === d.name).color)
-              .append("span")
-                  .classed("fas fa-square", false)
-                  .attr("class", "legend-text")
-                  .html((d) => "&nbsp;&nbsp;" + `${d.name}`);
+        let LangPopLegendItems = d3.select("#ul-lang-pop-legend")
+                                   .selectAll("i")
+                                   .data(topTechs, (d) => d);     // rebind data
+        LangPopLegendItems.enter()
+                          .append("i")
+                             .attr("class", "list-group-item border-0 fas fa-square legend-item")
+                             // .style("color", (d,i) => colorScheme(i))
+                             .style("color", (d) => langFull.find((obj) => obj.name === d.name).color)
+                         .append("span")
+                             .classed("fas fa-square", false)
+                             .attr("class", "legend-text")
+                             .html((d) => "&nbsp;&nbsp;" + `${d.name}`);
+        LangPopLegendItems.exit().remove();
     }
 };
 
