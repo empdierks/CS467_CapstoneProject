@@ -1,20 +1,27 @@
 
 // topoJSON data from: https://github.com/scotthmurray/d3-book/tree/master/chapter_14  (original source: https://github.com/topojson/us-atlas licensed by ISC)
 // map creation code modified from: https://github.com/scotthmurray/d3-book/blob/master/chapter_14/02_projection.html   (licensed by CC BY-NC-ND 3.0)
-let createMap = () => {
-    // create svg element & attach to containing div
+let createMap = () => {   
+    mapArea = d3.select("#map-area");
+    
+    // no jobs in any city error message 
+    mapArea.append("p")
+           .html("No jobs for any language!")
+           .attr("id","top-cities-error-msg")
+           .attr("class", "text-center invisible error-msg");      // not visible by default; use Bootstrap class because overrides manual setting
+    
+    // create svg for map
     const mapW = 800, mapH = 550;   // std map dims per documentation ( https://github.com/topojson/us-atlas ), trimmed to reduce whitespace
-    let mapSvg = d3.select("#map-area")
-                   .append("svg")
-                      .attr("preserveAspectRatio", "xMinYMin meet")    // allows responsive resize of svg
-                      .attr("viewBox", `0 0 ${mapW} ${mapH}`)         // use std dims to define ratio
-                      .attr("id", "svg-us-map");
+    let mapSvg = mapArea.append("svg")
+                        .attr("preserveAspectRatio", "xMinYMin meet")   // allows responsive resize of svg
+                        .attr("viewBox", `0 0 ${mapW} ${mapH}`)         // use std dims to define ratio
+                        .attr("id", "svg-us-map");
 
-    // define map projection
+    // map projection
     let projection = d3.geoAlbersUsa()
                        .translate([mapW/2, mapH/2]);   // use std dims initially
 
-    // define path generator
+    // path generator
     let path = d3.geoPath()
                  .projection(projection);
 
@@ -162,6 +169,8 @@ let createCities = (projection, citiesData) => {
           })
 
           .on("click", (d) => {
+              d3.event.preventDefault();
+              d3.event.stopPropagation();
               showCityData(d.city, citiesData);
               // animate?      
           })            
@@ -284,25 +293,38 @@ let createTechListSubLists = (citiesData) => {
 let showTopCities = (techName, citiesData) => {
     resetMap();
 
+    // top cities
     const numCities = 5;    
     let citiesDataByLangPop = citiesData.slice(0)                                                                // don't sort in place!!  
-                                        .sort((a, b) => b.langCounts[techName] - a.langCounts[techName])         // sort desc by specified techName count
+                                        .sort((a, b) => b.langCounts[techName] - a.langCounts[techName])         // sort cities desc by specified techName count
                                         .slice(0, numCities);                                                    // keep top cities only
     let topCities = citiesDataByLangPop.map((obj) => ({ cityName:obj.cityName, langCount:obj.langCounts[techName]})); // create array of city, count objs: [ {cityName:"Ann Arbor", langCount:145}, ... ]
-    // for (i = topCities.length - 1; i >= 0; i--) {                           // drop cities w/ 0 counts?
-        // if (topCities[i].langCount === 0)
-            // topCities.pop();
-    // }
+    // drop cities w/ 0 counts
+    for (i = topCities.length - 1; i >= 0; i--) {                         
+        if (topCities[i].langCount === 0)
+            topCities.pop();
+    }
     
-    if (topCities.length) {
+    let noJobsMsg = d3.select("#top-cities-error-msg");
+    
+    // if no cities with jobs, display error message
+    if (!topCities.length) {
+        noJobsMsg.classed("invisible", false);   
+    }
+        
+    else {
+        // re-hide error message
+        noJobsMsg.classed("invisible", true);  
+        
+        // get color associate w tech -- done here so only selected 1x
         let langColor = langFull.find((obj) => obj.name === techName)
-                                .color;                                     // get lang color -- done here so not repeated for every top city
+                                .color;  
          
         d3.selectAll(".city-circle")           
           .filter((d) => topCities.map((c) => c.cityName).includes(d.city))   // if current city on top cities list
           .classed("city-default", false)             
           .classed("tech-hub", false)
-          .attr("visibility", "true")
+          .attr("visibility", "visible")
           .style("fill", langColor) 
           .style("opacity", 0.75)
           .attr("data-original-title", (d,i) => {                           // change tooltip to include job counts for each city              
@@ -324,8 +346,6 @@ let showTopCities = (techName, citiesData) => {
                     .style("filter", "saturate(80%)")
           });
     }
-    
-    // else display message re: no jobs in any city??
 };
 
 
@@ -356,15 +376,21 @@ let createCityDataArea = () => {
     let chartsArea = cityDataArea.append("div")
                                  .attr("class", "container-fluid card-body border-top");
     
-    // div container for language popularity chart
+    // div container for all language popularity chart elements
     let langPopChartArea = chartsArea.append("div")
                                      .attr("id", "div-lang-pop-chart-area");                                   
     // chart title
     langPopChartArea.append("p")
                         .attr("class", "card-text text-left")
-                        .html("Language Popularity");    
+                        .html("Language Popularity"); 
+    // error message if all 0 counts
+    langPopChartArea.append("p")
+          .html("No jobs for any language!")
+          .attr("id","lang-pop-error-msg")
+          .attr("class", "text-center d-none error-msg");     // hide by default
     // row for side-by-side chart & legend
     let langChartRow = langPopChartArea.append("div")
+                                       .attr("id", "div-lang-pop-chart-legend-row")
                                        .attr("class", "row");    
     // div & svg containers for donut chart
     const chartW = 300, chartH = 300; 
@@ -378,7 +404,10 @@ let createCityDataArea = () => {
     // div container for legend
     langChartRow.append("div")
                   .attr("id", "div-lang-pop-legend")
-                  .attr("class", "col-sm-6");
+                  .attr("class", "col-sm-6")
+                .append("ul")
+                  .attr("id", "ul-lang-pop-legend")
+                  .attr("class", "list-group");
 };
 
 
@@ -389,71 +418,94 @@ let showCityData = (cityName, citiesData) => {
     
     // get data for current city 
     let currCityObj = citiesData.find((obj) => obj.cityName === cityName);
+    console.log(currCityObj);
     
+    // change city name
     d3.select("#city-data-header")
       .html(cityName);
        
     d3.select("#city-data-one")
-      .html("Some Data"); 
-      
-    // pretend sorted data for donut chart -- TODO replace
-    let topTechs = [
-        { name:"Python", count:19 },
-        { name:"JavaScript", count:14 },
-        { name:"HTML-CSS", count:12 },
-        { name:"Java", count:8 },
-        { name:"C#", count:4 }
-    ];
+      .html("Some Data");      
     
-    // lang pop chart
-    const colorScheme = d3.scaleOrdinal(d3.schemeDark2); // color scheme
-    const chartW = 300, chartH = 300;                    // initial size same as viewbox dims in createCityDataArea 
-    const chartR = chartW/2;                      
-    // generate angles
-    let donutAngles = d3.pie()                           
-                      .value((d) => d.count)
-                      .padAngle(.03)
-                      (topTechs);
-    // generate arcs
-    let donutArc = d3.arc()                             
-                     .innerRadius(chartR * 0.67)
-                     .outerRadius(chartR);
-    // draw wedge paths
-    let langPopChart = d3.select("#svg-lang-pop-chart")  
-      .selectAll("path")
-      .data(donutAngles)
-      .enter()
-      .append("path")
-          .attr("d", donutArc)
-          .attr("class", "donut-wedge-path")
-          .attr("fill", (d,i) => colorScheme(i))           
-          // use css for more styling?
-          // animation from: http://www.adeveloperdiary.com/d3-js/create-a-simple-donut-chart-using-d3-js/   NOT WORKING
-          // .transition()
-            // .duration(1000)
-            // .selectAll("path") -- don't need??
-            // .attrTween("d", (d) => {
-                // let interpolate = d3.interpolate({startAngle: 0, endAngle: 0}, d);
-                // return ((t) => donutArc(interpolate(t)));
-            // })
-      .exit().remove();            
-    // console.log(d3.select("#svg-lang-pop-chart path").data());
+    // sort technologies by counts
+    const numTechs = 5;    
+    let techsByPop = Object.entries(currCityObj.langCounts)
+                           .sort((a, b) => b[1] - a[1])               // sort techs desc by count
+                           .slice(0, numTechs);                       // keep top techs only
+    let topTechs = techsByPop.map((arr) => ({ name:arr[0], count:arr[1]}));
+    for (i = topTechs.length - 1; i >= 0; i--) {                      // drop techs w/ 0 counts
+        if (topTechs[i].count === 0)
+            topTechs.pop();
+    }
+    console.log(topTechs);
     
-    // lang pop legend    
-    d3.select("#div-lang-pop-legend")
-      .append("ul")
-          .attr("class", "list-group")
-      .selectAll("i")
-      .data(topTechs)
-      .enter()
-      .append("i")
-          .attr("class", "fas fa-square list-group-item legend-item")
-          .style("color", (d,i) => colorScheme(i))
-      .append("span")
-          .classed("fas fa-square", false)
-          .attr("class", "legend-text")
-          .html((d) => "&nbsp;&nbsp;" + `${d.name}`);
+    let chartAndLegendDiv = d3.select("#div-lang-pop-chart-legend-row");
+    let noJobsMsg = d3.select("#lang-pop-error-msg"); 
     
+    // if zero jobs for all techs, display error message instead of chart
+    if (!topTechs.length) {
+        chartAndLegendDiv.classed("d-none", true);
+        noJobsMsg.classed("d-none", false);
+    }
+        
+    else {
+        // display chart & hide error message
+        chartAndLegendDiv.classed("d-none", false);
+        noJobsMsg.classed("d-none", true);
+            
+        // lang pop chart
+        // const colorScheme = d3.scaleOrdinal(d3.schemeDark2); // color scheme
+        const chartW = 300, chartH = 300;                    // initial size same as viewbox dims in createCityDataArea 
+        const chartR = chartW/2;                      
+        // generate angles
+        let donutAngles = d3.pie()                           
+                          .value((d) => d.count)
+                          .padAngle(.03)
+                          (topTechs);
+        // generate arcs
+        let donutArc = d3.arc()                             
+                         .innerRadius(chartR * 0.67)
+                         .outerRadius(chartR);
+        // draw wedge paths
+        let langPopChart = d3.select("#svg-lang-pop-chart")
+        langPopChart.selectAll("path")
+                    .remove();
+        langPopChart.selectAll("path")
+                    .data(donutAngles)
+                    .enter()
+                    .append("path")
+                        .attr("d", donutArc)
+                        .attr("class", "donut-wedge-path")
+                        // .attr("fill", (d,i) => colorScheme(i))
+                        .attr("fill", (d) => langFull.find((obj) => obj.name === d.data.name).color)
+                        // animation from: http://www.adeveloperdiary.com/d3-js/create-a-simple-donut-chart-using-d3-js/
+                        .transition()
+                            .duration(1000)
+                            .attrTween("d", (d) => {
+                                let interpolate = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+                                return ((t) => donutArc(interpolate(t)));
+                            });
+                            
+        console.log(d3.select(".donut-wedge-path").data());
+        
+        // lang pop legend    
+        let langPopLegend = d3.select("#ul-lang-pop-legend");
+        langPopLegend.selectAll("i")
+                     .remove();
+        langPopLegend.selectAll("span")
+                     .remove();
+        langPopLegend.selectAll("i")  
+              .data(topTechs)
+              .enter()
+              .append("i")
+                  .attr("class", "list-group-item border-0 fas fa-square legend-item")
+                  // .style("color", (d,i) => colorScheme(i))
+                  .style("color", (d) => langFull.find((obj) => obj.name === d.name).color)
+              .append("span")
+                  .classed("fas fa-square", false)
+                  .attr("class", "legend-text")
+                  .html((d) => "&nbsp;&nbsp;" + `${d.name}`);
+    }
 };
 
 
@@ -465,7 +517,7 @@ const langFull = [
     { name:"Go", category:"language", color:"#00ACD7", sector:["enterprise", "web"] },
     { name:"Haskell", category:"language", color:"#5E5086", sector:["enterprise", "web"]},
     { name:"HTML-CSS", category:"language", color:"#F16529", sector:["web"] },
-    { name:"Java", category:"language", color:"#5382A1", sector:["enterprise", "mobile", "web"] },
+    { name:"Java", category:"language", color:"#C74634", sector:["enterprise", "mobile", "web"] },
     { name:"JavaScript", category:"language", color:"#F7DF1E", sector:["mobile", "web"] },
     { name:"Kotlin", category:"language", color:"#806EE3", sector:["mobile", "web"] },
     { name:"MatLab", category:"language", color:"#1A6CFF", sector:["enterprise"] },
@@ -479,7 +531,7 @@ const langFull = [
     { name:"Scala", category:"language", color:"#FF0000", sector:["enterprise", "mobile", "web"] },
     { name:"Swift", category:"language", color:"#F98039", sector:["enterprise", "mobile"] },
     { name:"TypeScript", category:"language", color:"#007ACC", sector:["mobile", "web"] },
-    { name:"Visual Basic", category:"language", color:"004E8C", sector:["enterprise"] },
+    { name:"Visual Basic", category:"language", color:"#004E8C", sector:["enterprise"] },
 
     { name:"ASP.NET", category:"framework", color:"#6D409C", sector:["mobile", "web"] },     // TODO -- sectors not accurate for frameworks or DBs
     { name:"Angular", category:"framework", color:"#E23237", sector:["web"] },
@@ -507,6 +559,7 @@ const langFull = [
     const resp = await fetch("/retrieveData");
     const citiesData = await resp.json();
     // console.log(citiesData);
+    console.log(citiesData[0]);
     // console.log(citiesData.map((obj) => obj.cityName).sort());
     
     // populate page with menus & visuals
