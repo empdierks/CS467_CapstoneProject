@@ -31,8 +31,11 @@
       <div class="container-fluid">  
         <div class="row">         
           <!-- middle on desktop, 1st on mobile -->
-          <div class="col-md-6 order-md-2 middle-panel">   
+          <div class="col-md-6 order-md-2 middle-panel" id="div-middle-panel">
+            <div id="error-msg-area"></div>          
             <div id="map-area"></div>
+            <div id="map-reset-btn-area"></div>
+            <div id="national-trends-area"></div>
           </div>          
           <!-- left on desktop, 2nd on mobile -->
           <div class="col-md-3 order-md-1 side-panel" id="explore-by-loc">
@@ -46,9 +49,6 @@
                     </a> 
                     to view the most popular programming languages in job postings and other job data.
                   </p>
-                  <div class="text-center">
-                    <button type="button" class="btn btn-secondary btn-sm w-50 map-btn" id="show-locs-btn">Show Cities</button>
-                  </div>
               </div>
               <div class="side-content" id="city-data-area">
               </div>
@@ -64,9 +64,6 @@
                         demand.
                       </a>
                     </p>
-                  <div class="text-center">
-                    <button type="button" class="btn btn-secondary btn-sm w-50 map-btn" id="tech-reset-btn">Reset Map</button>
-                  </div>
               <div class="side-content text-left" id="lang-list-area">
               </div>
           </div>

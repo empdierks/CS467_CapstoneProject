@@ -1,12 +1,14 @@
-/* WHOLE PAGE */
+/* MAIN LAYOUT/THROUGHOUT PAGE */
 .header {
     padding: 0.5em 0 0.5em 0;
-    background-color: #f2f2f2;
+    /* background-color: #f2f2f2; */
+    background-color: #00ACD7;
+    color: white;
     letter-spacing: .3em;
 }
 
 .side-title-text {
-    padding: 0.8em 0 0.1em 0;
+    padding: 1.25em 0 0.1em 0;
     letter-spacing: .06em;
 }
 .side-explain-text {
@@ -16,19 +18,10 @@
     color: darkgrey;
     line-height: 1.25;
 }
+.side-content {
+    padding-top: 2em;  
+}
 
-.map-btn {
-    margin: 1em 0 1em 0;
-    letter-spacing: .06em;
-}
-.btn-secondary {
-    background-color: #b3b3b3 !important; 
-    border-color: #b3b3b3 !important;    
-}
-.btn:focus, .btn:active {
-    outline: none !important;
-    box-shadow: none !important;
-}
 
 .clickable {
     cursor: pointer;
@@ -37,10 +30,19 @@
     cursor: default
 }
 
+a:link, a:visited, a:hover, a:active {
+  text-decoration: none;
+}
+
+
+
 
 /* MAP */
 #map-area {
-    padding-top: 4em;
+    /* negative margin to compensate for error msg on top */
+    margin-top: -3em;
+    /* forces resize of entire map    */
+    padding: 0 2.6em;
 }
 
 .state-path {   
@@ -53,17 +55,28 @@
 }
 
 .city-circle.city-default {
-    fill: mediumaquamarine !important; 
-    stroke: #2c8768 !important;
+    fill: #00ACD7 !important; 
+    stroke: #00ACD7 !important;
     stroke-width: 0.25 !important;
+    stroke-dasharray: 0 !important;
     /* specifies stroke then fill on top */
     paint-order: stroke !important;
     opacity: 0.75 !important;
+
 }
 .city-circle.tech-hub {
-    stroke: aquamarine !important;
+    fill: #00ACD7 !important; 
+    stroke: #33D6FF !important;
     /* change back to 5 if remove paint-order above */
-    stroke-width: 10 !important;   
+    stroke-width: 6 !important; 
+    stroke-dasharray: 0 !important;  
+}
+.city-circle.city-active {
+    fill: #FF00FF;
+    stroke: #FF00FF;
+    stroke-width: 3;
+    paint-order: stroke; 
+    opacity: 0.75;
 }
 
 .tooltip-inner {
@@ -82,17 +95,44 @@
     border-top-color: dimgrey;
 }
 
+/* CHANGE THIS TO MODAL?? */
+#top-cities-error-msg {
+    padding-top: 1em;
+}
+
+.btn-secondary {
+    background-color: #B3B3B3 !important; 
+    border-color: #B3B3B3 !important; 
+    /* background-color: #686868 !important;  */
+    /* border-color: #686868 !important;      */
+}
+.btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+#master-reset-btn {
+    margin-top: -3em;
+    margin-right: 2em;
+    padding: 0.25em 1em;
+    font-size: 0.8em;
+    letter-spacing: .06em;
+}
+
+
 /* CITY DATA */
 .city-header {
     padding: 0.5rem 1.25rem;
-    /* text-transform: uppercase; */
-    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
 }
 
+/* also used in national data charts */
 .list-group-item.legend-item {
-    padding: 0.25em 0.25em
+    padding: 0.25em 0.25em;
 }
-
+.legend-square {
+    font-size: 0.8em; 
+}
 .legend-text {
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",
         Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,
@@ -103,6 +143,17 @@
     font-weight: 400;
 }
 
+.wedge-label {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",
+        Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,
+        "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",
+        "Noto Color Emoji";
+    fill: white;
+    font-size: 1em;
+    font-weight: 600;    
+}
+
+
 
 /* LANGUAGE LIST */
 .lang-list-item {
@@ -112,7 +163,7 @@
 }
 
 #ul-lang-sublist {
-    padding: 0.25em 0 0 2em;
+    padding: 0.5em 0 0 2em;
 }
 
 .arrow-icon {
@@ -128,9 +179,54 @@
 
 .lang-list-item.has-logo {
     margin-left: 0;
-    padding: 0.25em 0 0.25em 2em;
+    padding: 0.3em 0 0.3em 2em;
     background-size: 1.20em;
     background-repeat: no-repeat;
     background-position: left center;
 }
 
+
+/* NATIONAL CHARTS */
+#national-trends-area {
+    padding: 0.75em 0 0.5em 0;
+}
+
+#div-nat-charts-row {
+    padding: 0 1em 0 0.7em;
+}
+
+.axis path, .axis line {
+    visibility: hidden;
+}
+.axis text {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",
+        Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,
+        "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol",
+        "Noto Color Emoji";
+    color: #6c757d;
+    font-size: 0.9em;
+    font-weight: 700;
+}
+
+.chart-title {
+    padding: 0;
+    margin: 0;  
+}
+.chart-subtitle {
+    padding: 0;
+    margin: 0;
+    font-size: 0.85em;
+    color: darkgrey;
+}
+
+.small-legend-container {
+    padding-left: 1em;
+}
+.small-legend-square {
+    font-size: 0.5em;
+}
+.small-legend-text {
+    color: #6c757d;
+    font-size: 1.1em;
+    font-weight: 600;
+}
