@@ -30,7 +30,7 @@ def get_language_count(city_url, lang_search):
 
 
 def populate():
-	city_array_actual = ['Portland', 'Tampa', 'Boston', 'Atlanta', 'Phoenix', 'San Diego','Ann Arbor', 'San Francisco', 'Jose', 'Seattle', 'Sacramento', 'San Antonio', 'Riverside', 'Raleigh', 'Pittsburgh','Philadelphia', 'Orlando', 'New York City', 'Minneapolis', 'Miami', 'Madison', 'Los Angeles', 'Las Vegas', 'Ithaca','Houston', 'Fort Collins', 'Durham', 'Detroit', 'Dallas', 'Corvallis', 'Cincinatti', 'Chicago', 'Charlottesville','Charlotte', 'Boulder', 'Baltimore', 'Austin']
+	city_array_actual = ['Portland', 'Tampa', 'Boston', 'Atlanta', 'Phoenix', 'San Diego','Ann Arbor', 'San Francisco', 'San Jose', 'Seattle', 'Sacramento', 'San Antonio', 'Riverside', 'Raleigh', 'Pittsburgh','Philadelphia', 'Orlando', 'New York City', 'Minneapolis', 'Miami', 'Madison', 'Los Angeles', 'Las Vegas', 'Ithaca','Houston', 'Fort Collins', 'Durham', 'Detroit', 'Dallas', 'Corvallis', 'Cincinatti', 'Chicago', 'Charlottesville','Charlotte', 'Boulder', 'Baltimore', 'Austin']
 	city_array_search = ['Portland', 'Tampa', 'Boston', 'Atlanta', 'Phoenix', 'Diego','Ann Arbor', 'Francisco', 'Jose', 'Seattle', 'Sacramento', 'Antonio', 'Riverside', 'Raleigh', 'Pittsburgh','Philadelphia', 'Orlando', 'NYC', 'Minneapolis', 'Miami', 'Madison', 'Angeles', 'Vegas', 'Ithaca','Houston', 'Collins', 'Durham', 'Detroit', 'Dallas', 'Corvallis', 'Cincinatti', 'Chicago', 'Charlottesville','Charlotte', 'Boulder', 'Baltimore', 'Austin']
 
 	for c in range(len(city_array_search)):
