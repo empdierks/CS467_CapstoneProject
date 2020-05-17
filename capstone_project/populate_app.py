@@ -84,7 +84,7 @@ def populate():
 		except:
 			pass
 
-		lang = Languages.objects.get_or_create(city=city, c=fake_c, c_plus = fake_cplus, c_sharp = fake_csharp,
+		lang = Languages.objects.update_or_create(city=city, c=fake_c, c_plus = fake_cplus, c_sharp = fake_csharp,
         dart = fake_dart, go=fake_go, haskell=fake_haskell, html_css= fake_html, java=fake_java, javaScript=fake_javascript,
         kotlin=fake_kotlin, matLab=fake_matLab, obj_c=fake_matLab, perl =fake_perl, php=fake_php ,python =fake_python, r=fake_r,
         ruby=fake_ruby, rust=fake_rust, scala=fake_scala, swift=fake_swift, typeScript=fake_typeScript, visual_basic=fake_visual_basic,
