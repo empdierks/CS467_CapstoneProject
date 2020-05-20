@@ -155,6 +155,7 @@ let createCities = (projection, citiesData) => {
         { city:"Dallas", state:"Texas", lat:32.78306, lon:-96.80667, hub:0 },
         { city:"Detroit", state:"Michigan", lat:42.33143, lon:-83.04575, hub:0 },
         { city:"Fort Collins", state:"Colorado", lat:40.58526, lon:-105.08442, hub:0 },
+        { city:"Hartford", state:"Connecticut", lat:41.76371, lon:-72.68509, hub:0 },
         { city:"Houston", state:"Texas", lat:29.76045, lon:-95.369784, hub:0 },
         { city:"Ithaca", state:"New York", lat:42.44063, lon:-76.49661, hub:0 },
         { city:"Las Vegas", state:"Nevada", lat:36.17497, lon:-115.13722, hub:0 },
@@ -162,6 +163,7 @@ let createCities = (projection, citiesData) => {
         { city:"Madison", state:"Wisconsin", lat:43.07305, lon:-89.40123, hub:0 },
         { city:"Miami", state:"Florida", lat:25.77427, lon:-80.19366, hub:0 },
         { city:"Minneapolis", state:"Minnesota", lat:44.97997, lon:-93.26384, hub:0 },
+        { city:"New Haven", state:"Connecticut", lat:41.30815, lon:-72.92816, hub: 0 },
         { city:"New York City", state:"New York", lat:40.71455, lon:-74.007124, hub:0 },
         { city:"Orlando", state:"Florida", lat:28.53834, lon:-81.37924, hub:0 },
         { city:"Philadelphia", state:"Pennsylvania", lat:39.95228, lon:-75.162454, hub:0 },
@@ -180,6 +182,8 @@ let createCities = (projection, citiesData) => {
         { city:"Tampa", state:"Florida", lat:27.94752, lon:-82.45843, hub:0 },
         { city:"Washington, D.C.", state:"District of Columbia", lat:38.89511, lon:-77.03637, hub:1 },
     ];
+    
+    // console.log(cities.map((obj) => obj.city));          // TODO -- DELETE ME
 
     // create city circles
     let cityHoverT = 200;
@@ -836,7 +840,7 @@ const langFull = [
     const resp = await fetch("/retrieveData");
     const citiesData = await resp.json();
     // console.log(citiesData);
-    console.log(citiesData[0]);
+    // console.log(citiesData[0]);
     // console.log(citiesData.map((obj) => obj.cityName).sort());
     
     // populate page with menus & visuals
