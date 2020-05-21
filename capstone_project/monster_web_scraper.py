@@ -7,18 +7,20 @@ def get_nums(url):
 	headers = requests.utils.default_headers()
 	headers.update({
 			'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
+
 	})
 
 	page = requests.get(url, headers=headers)
 	soup = BeautifulSoup(page.content, 'html.parser')
 
 	#See if any matches in city
+	#job_match = soup.find('h1', class_='pivot block')
 	try:
 		jobs_figure = soup.find('h2', class_='figure')
 		values = jobs_figure.text.strip()
 
 		#https://www.kite.com/python/answers/how-to-extract-integers-from-a-string-in-python
-		print(values)
+		# print(values)
 		# print(type(values))
 		# words = values.split()  #separates it into '(4', 'Jobs', 'Found)'
 		# return int(words[0][1])  #prints just 4
@@ -31,11 +33,28 @@ def get_nums(url):
 	except:
 		return 0
 
+	#if job_match.text.strip() == "Sorry, we didn't find any jobs matching your criteria":
+		#return 0
+
+
+	#elif job_match.text.strip() == "Sorry, we didn't find any jobs matching your criteria":
+		#return 0
+		#find all job links
+		#results = soup.find(id='ResultsContainer')
+		#job_elems = results.find_all('section', class_='card-content')
+
+		#finds all job links
+		#for job_elem in job_elems:
+			#link = job_elem.a
+			#if None == link:
+				#continue
+			#print(link.get('href'))
+
 
 def get_city_language_nums():
-	query_locations = ['Ann-Arbor-MI', 'Atlanta-GA', 'Austin-TX', 'Baltimore-MD', 'Boston-MA', 'Boulder-CO', 'Charlotte-NC', 'Charlottesville-VA', 'Chicago-IL', 'Cincinatti-OH',
-	'Corvallis-OR', 'Dallas-TX', 'Detroit-MI','Fort-Collins-CO', 'Houston-TX', 'Ithaca-NY', 'Las-Vegas-NV', 'Los-Angeles-CA', 'Madison-WI', 'Miami-FL', 'Minneapolis-MN',
-	'New-York-City-NY', 'Orlando-FL', 'Philadelphia-PA', 'Phoenix-AZ', 'Pittsburgh-PA', 'Portland-OR', 'Raleigh-NC', 'Riverside-CA', 'Sacramento-CA', 'San-Antonio-TX',
+	query_locations = ['Ann-Arbor-MI', 'Atlanta-GA', 'Austin-TX', 'Baltimore-MD', 'Boston-MA', 'Boulder-CO', 'Charlotte-NC', 'Charlottesville-VA', 'Chicago-IL', 'Cincinnati-OH',
+	'Corvallis-OR', 'Dallas-TX', 'Detroit-MI','Fort-Collins-CO', 'Hartford-CT', 'Houston-TX', 'Ithaca-NY', 'Las-Vegas-NV', 'Los-Angeles-CA', 'Madison-WI', 'Miami-FL', 'Minneapolis-MN',
+	'New-Haven-CT','New-York-City-NY', 'Orlando-FL', 'Philadelphia-PA', 'Phoenix-AZ', 'Pittsburgh-PA', 'Portland-OR', 'Raleigh-NC', 'Riverside-CA', 'Sacramento-CA', 'San-Antonio-TX',
 	'San-Diego-CA', 'San-Francisco-CA', 'San-Jose-CA', 'Seattle-WA', 'Saint-Louis-MO', 'Tampa-FL', 'Washington-DC']
 
 
@@ -56,14 +75,14 @@ def get_city_language_nums():
 	('Vue.js','Vue'),('MS SQL Server','ms-sql-server'),('MongoDB','mongoDB'),('MySQL','MySQL'),('PostGreSQL','postGreSQL'),
 	('Redis','redis'),('SQLite','sqlite')]
 
-	locations = ['Ann Arbor', 'Atlanta', 'Austin', 'Baltimore', 'Boston', 'Boulder', 'Charlotte', 'Charlottesville', 'Chicago', 'Cincinatti',
-	'Corvallis', 'Dallas', 'Detroit','Fort Collins', 'Houston', 'Ithaca', 'Las Vegas', 'Los Angeles', 'Madison', 'Miami', 'Minneapolis',
-	'New York City', 'Orlando', 'Philadelphia', 'Phoenix', 'Pittsburgh', 'Portland', 'Raleigh', 'Riverside', 'Sacramento', 'San Antonio',
+	locations = ['Ann Arbor', 'Atlanta', 'Austin', 'Baltimore', 'Boston', 'Boulder', 'Charlotte', 'Charlottesville', 'Chicago', 'Cincinnati',
+	'Corvallis', 'Dallas', 'Detroit','Fort Collins', 'Hartford','Houston', 'Ithaca', 'Las Vegas', 'Los Angeles', 'Madison', 'Miami', 'Minneapolis',
+	'New Haven','New York City', 'Orlando', 'Philadelphia', 'Phoenix', 'Pittsburgh', 'Portland', 'Raleigh', 'Riverside', 'Sacramento', 'San Antonio',
 	'San Diego', 'San Francisco', 'San Jose', 'Seattle', 'Saint Louis', 'Tampa', 'Washington DC']
 
-	#################################################
+	################################################
 	# Testing subset of data
-	#################################################
+	################################################
 	# query_locations = ['Ann-Arbor-MI', 'Atlanta-GA', 'Austin-TX']
 	# query_language = ['C', 'C__2B__2B', 'c__23', 'flutter', 'go', 'haskell', 'HTML', 'java', 'Javascript']
 	# pairs = [('C', 'C'), ('C++','C__2B__2B'), ('C#', 'c__23'), ('Dart', 'flutter'),('Go', 'go'), ('Haskell', 'haskell'),
@@ -75,7 +94,7 @@ def get_city_language_nums():
 	lang_index=0
 
 	job_query = '-software'
-	radius = 5
+	# radius = 5
 	# date_posted = 30
 
 	#URL = 'https://www.monster.com/jobs/search/?q=C-software&rad=5&where=Seattle-WA&tm=30'
@@ -96,10 +115,10 @@ def get_city_language_nums():
 			# url = 'https://www.monster.com/jobs/search?q='+lang+job_query+'&rad='+str(radius)+'&where='+city+'&tm='
 			url = 'https://www.monster.com/jobs/search?q='+lang+job_query+'&where='+city
 			# print(url)
-			print('Location: '+locations[loc_index-1] + ' Lang: '+pairs[lang_index][0])
+			# print('Location: '+locations[loc_index-1] + ' Lang: '+pairs[lang_index][0])
 
 			num = get_nums(url)
-			print(num)
+			# print(num)
 
 			inner_dict[pairs[lang_index][0]] = num
 			lang_index = lang_index +1
@@ -110,10 +129,25 @@ def get_city_language_nums():
 
 	return completed_list
 
+
 def main():
 
 	completed_list = get_city_language_nums()
 	print(completed_list)
 
+#URL = 'https://www.monster.com/jobs/search/?q=sqlite-software&rad=5&where=Washington-DC&tm=30'
+#print(get_nums(URL))
+
+
+	#title_elem = job_elem.find('h2', class_='title')
+	#company_elem = job_elem.find('div', class_='company')
+	#location_elem = job_elem.find('div', class_='location')
+	#if None in (title_elem):
+		#continue
+	#print(title_elem.text.strip())
+	#print(company_elem.text.strip())
+	#print(location_elem.text.strip())
+	#print()
+	#print(job_elem, end='\n'*2)
 if __name__ == '__main__':
 	main()
