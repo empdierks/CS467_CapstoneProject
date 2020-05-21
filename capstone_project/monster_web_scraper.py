@@ -52,7 +52,11 @@ def get_nums(url):
 
 
 def get_city_language_nums():
+<<<<<<< HEAD
 	query_locations = ['Ann-Arbor-MI', 'Atlanta-GA', 'Austin-TX', 'Baltimore-MD', 'Boston-MA', 'Boulder-CO', 'Charlotte-NC', 'Charlottesville-VA', 'Chicago-IL', 'Cincinnati-OH',
+=======
+	query_locations = ['Ann-Arbor-MI', 'Atlanta-GA', 'Austin-TX', 'Baltimore-MD', 'Boston-MA', 'Boulder-CO', 'Charlotte-NC', 'Charlottesville-VA', 'Chicago-IL', 'Cincinatti-OH',
+>>>>>>> d6139dd7ccf5cf742192eaa4ed5da4bc15af52bd
 	'Corvallis-OR', 'Dallas-TX', 'Detroit-MI','Fort-Collins-CO', 'Hartford-CT', 'Houston-TX', 'Ithaca-NY', 'Las-Vegas-NV', 'Los-Angeles-CA', 'Madison-WI', 'Miami-FL', 'Minneapolis-MN',
 	'New-Haven-CT','New-York-City-NY', 'Orlando-FL', 'Philadelphia-PA', 'Phoenix-AZ', 'Pittsburgh-PA', 'Portland-OR', 'Raleigh-NC', 'Riverside-CA', 'Sacramento-CA', 'San-Antonio-TX',
 	'San-Diego-CA', 'San-Francisco-CA', 'San-Jose-CA', 'Seattle-WA', 'Saint-Louis-MO', 'Tampa-FL', 'Washington-DC']
@@ -75,7 +79,11 @@ def get_city_language_nums():
 	('Vue.js','Vue'),('MS SQL Server','ms-sql-server'),('MongoDB','mongoDB'),('MySQL','MySQL'),('PostGreSQL','postGreSQL'),
 	('Redis','redis'),('SQLite','sqlite')]
 
+<<<<<<< HEAD
 	locations = ['Ann Arbor', 'Atlanta', 'Austin', 'Baltimore', 'Boston', 'Boulder', 'Charlotte', 'Charlottesville', 'Chicago', 'Cincinnati',
+=======
+	locations = ['Ann Arbor', 'Atlanta', 'Austin', 'Baltimore', 'Boston', 'Boulder', 'Charlotte', 'Charlottesville', 'Chicago', 'Cincinatti',
+>>>>>>> d6139dd7ccf5cf742192eaa4ed5da4bc15af52bd
 	'Corvallis', 'Dallas', 'Detroit','Fort Collins', 'Hartford','Houston', 'Ithaca', 'Las Vegas', 'Los Angeles', 'Madison', 'Miami', 'Minneapolis',
 	'New Haven','New York City', 'Orlando', 'Philadelphia', 'Phoenix', 'Pittsburgh', 'Portland', 'Raleigh', 'Riverside', 'Sacramento', 'San Antonio',
 	'San Diego', 'San Francisco', 'San Jose', 'Seattle', 'Saint Louis', 'Tampa', 'Washington DC']
