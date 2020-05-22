@@ -22,7 +22,6 @@
     padding-top: 1.5em;  
 }
 
-
 .clickable {
     cursor: pointer;
 }
@@ -55,6 +54,11 @@ a:link, a:visited, a:hover, a:active {
 }
 .tooltip.bs-tooltip-top .arrow:before {
     border-top-color: dimgrey;
+}
+
+
+.card-body {
+    padding: 0.75em;
 }
 
 
@@ -125,13 +129,49 @@ a:link, a:visited, a:hover, a:active {
     letter-spacing: 0.3em;
 }
 
-.card-text-small {
-    /* font-size: 0.9em; */
+.city-data-top-title {
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
+#div-salaries-list {
+    margin-top: 0.5em;
+    margin-bottom: -0.25em;
+    padding-left: 1em;
+}
+
+.div-sal-pair {
+    padding-bottom: 0.75em;
+}
+
+.reg-sal-row, 
+.adj-sal-row {
+    margin-bottom: 0;
+}
+
+.sal-list-job-title {
+    font-size: 0.9em;
+}
+.sal-list-salary {
+    color: #00ACD7;
+    font-size: 0.9em;
+    letter-spacing: 0.08em;
+}
+
+.sal-list-adj-text,
+.sal-list-adj-salary {
+    padding: 0;
+    font-size: 0.75em;
+    text-transform: uppercase;
+    color: darkgrey;
+}
+.reg-sal-spacer {
+    border: 1px dotted darkgrey;
+}
+
+
 #div-filter-btn-group {
-    margin-top: -0.5em;
-    padding: 0 0 1em 0;   
+    padding: 0.7em 0 1em 0;   
 }
 .filter-button {
     font-size: 0.8em !important;

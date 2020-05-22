@@ -369,38 +369,74 @@ let createCityDataArea = () => {
     // header (city name)    
     cityDataArea.append("h6")
         .attr("id", "city-data-header")
-        .attr("class", "card-header text-center city-header");
+        .attr("class", "card-header text-center city-header border-bottom-0");    // avoid redundant border 
     
-    // // one or separate card bodies?
-    // cityDataArea.append("div")
-        // .attr("id", "div-all-city-data")
-        // .attr("class", "card-body");
-        // // then would select this and add only card-text and images?
+    // section: salary info
+    // div container for whole salary area
+    let salariesArea = cityDataArea.append("div")
+        .attr("class", "card-body border-top");
     
-    // first info section
-    cityDataArea.append("div")
-        .attr("class", "card-body")
-        .append("p")
-            .attr("id", "city-data-one")  // change id when know contents
-            .attr("class", "card-text text-left card-text-small");
+    // salaries title
+    salariesArea.append("p")
+        .attr("id", "salary-info-header")
+        .attr("class", "card-text text-left city-data-top-title clickable")
+        .attr("data-toggle","collapse")                        // bootstrap collapse effect
+        .attr("data-target", "#div-salaries-list")  
+        .html("Median Salaries");
     
-    // div container for all charts?? (TODO -- if more than 1? -- otherwise combinet his div and below)
-    let chartsArea = cityDataArea.append("div")
-        .attr("class", "container-fluid card-body border-top");
+    // div container for salaries list
+    let salListDiv = salariesArea.append("div")
+        .attr("id", "div-salaries-list")
+        .attr("class", "container-fluid collapse show");
+        
+    // for each job title, div containing pair of rows (reg & adjusted salary) w 2x cols each
+    let jobTitles = ["Software Engineer I", "Software Engineer III", "Software Engineer V"];
+    let salLine = salListDiv.selectAll("div")
+        .data(jobTitles)
+        .enter()
+        .append("div")
+            .attr("class", "div-sal-pair");
+   
+   // reg salary
+    let regSalRow = salLine.append("p")
+        .attr("class", "row no-gutters reg-sal-row");
+    regSalRow.append("span")
+        .attr("class", "col-7 text-left sal-list-job-title")
+        .html((d) => d);
+    regSalRow.append("span")
+        .attr("id", (d,i) => `sal-for-job-${i + 1}`)
+        .attr("class", "col-4 text-right font-italic font-weight-bold sal-list-salary");
     
-    // most pop techs chart skeleton
-    
+    // adjusted salary
+    let adjSalRow = salLine.append("p")
+        .attr("class", "row no-gutters adj-sal-row");   
+    adjSalRow.append("span")
+        .attr("class", "col-8 text-left sal-list-adj-text")
+        .html("Adjusted for cost of living");
+    adjSalRow.append("span")
+        .attr("id", (d,i) => `adj-sal-for-job-${i + 1}`)
+        .attr("class", "col-3 text-right sal-list-adj-salary");    
+
+    // section: most popular techs
     // div container for all chart elements
-    let techPopChartArea = chartsArea.append("div")
-        .attr("id", "div-tech-pop-chart-area");                                   
+    let techPopChartArea = cityDataArea.append("div")
+        .attr("id", "div-tech-pop-chart-area")
+        .attr("class", "container-fluid card-body border-top");        
     
     // chart title
     techPopChartArea.append("p")
-        .attr("class", "card-text text-left card-text-small")
+        .attr("class", "card-text text-left city-data-top-title clickable")
+        .attr("data-toggle","collapse")                        // bootstrap collapse effect
+        .attr("data-target", "#div-tech-pop-contents")  
         .html("Most Popular Technologies"); 
     
+    // div cont for buttons & chart (for smoother collapse)
+    let techPopContents = techPopChartArea.append("div")
+        .attr("id", "div-tech-pop-contents")
+        .attr("class", "collapse show");
+    
     // filter buttons
-    let buttonGroup = techPopChartArea.append("div")
+    let buttonGroup = techPopContents.append("div")
         .attr("id", "div-filter-btn-group")
         .attr("class", "btn-group-sm text-center")
         .attr("role", "group");       
@@ -422,13 +458,13 @@ let createCityDataArea = () => {
             .on("click", (d) => updateTechPopChart(`${d.category}`));                  
     
     // error message for all-0 counts
-    techPopChartArea.append("p")
+    techPopContents.append("p")
         .html("No jobs for this category!")
         .attr("id","tech-pop-error-msg")
         .attr("class", "text-center d-none error-msg");     // hide error msg by default
     
     // row for side-by-side chart & legend
-    let techChartRow = techPopChartArea.append("div")
+    let techChartRow = techPopContents.append("div")
        .attr("id", "div-tech-pop-chart-legend-row")
        .attr("class", "row justify-content-center align-items-center");            // center and vert align chart & legend
     // div & svg containers for donut chart
@@ -458,7 +494,7 @@ let showCityData = (cityName, citiesData) => {
     
     // TODO -- add transitions to text?
        
-    resetMap();
+    resetMap(); 
 
     // highlight current city on map
     const bubbleTransT = 300;
@@ -474,7 +510,6 @@ let showCityData = (cityName, citiesData) => {
             .attr("r", defaultR)
             .style("stroke-dasharray", "2,2");
             
-    
     // get data for current city 
     let currCityObj = citiesData.find((obj) => obj.cityName === cityName);
     console.log(currCityObj);                           // TODO -- DELETE ME
@@ -483,9 +518,24 @@ let showCityData = (cityName, citiesData) => {
     d3.select("#city-data-header")
       .datum(currCityObj)              // store city data object for retrieval by filter buttons
       .html(currCityObj.cityName);   
-       
-    d3.select("#city-data-one")
-      .html("Average Salaries");      
+    
+    // DELETE ME
+    let pretendCOLIdxs = [];
+    
+    // display med salaries & calculated adjusted salaries
+    let moneyFormat = d3.format("$,d");
+    d3.select("#sal-for-job-1")
+      .html(moneyFormat(100000));
+    d3.select("#sal-for-job-2")
+      .html(moneyFormat(100000));    
+    d3.select("#sal-for-job-3")
+      .html(moneyFormat(100000));
+    d3.select("#adj-sal-for-job-1")
+      .html(moneyFormat(90000));
+    d3.select("#adj-sal-for-job-2")
+      .html(moneyFormat(90000));
+    d3.select("#adj-sal-for-job-3")
+      .html(moneyFormat(90000));
 
     // when city first clicked, make donut chart w/ no category filtering
     updateTechPopChart("");    
@@ -528,7 +578,7 @@ let updateTechPopChart = (techCat) => {
         noJobsMsg.classed("d-none", false);
     } 
     
-    // make chart
+    // make chart & legend
     else {
         // display chart & hide error message
         chartAndLegendDiv.classed("d-none", false);
