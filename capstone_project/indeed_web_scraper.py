@@ -7,18 +7,21 @@ import time
 
 def get_language_count(lang_search, city_search):
 	url = "https://www.indeed.com/jobs" + lang_search + city_search + '&radius=0'
-	page = requests.get(url)
-	soup = BeautifulSoup(page.text, "html.parser")
 	try:
-		phrase_extract = soup.find(id="searchCountPages")
-		val = phrase_extract.text.split('<div id="searchCountPages">')[0]
+		page = requests.get(url)
+		soup = BeautifulSoup(page.text, "html.parser")
+		try:
+			phrase_extract = soup.find(id="searchCountPages")
+			val = phrase_extract.text.split('<div id="searchCountPages">')[0]
 
-		start = val.find('Page 1 of ') + 10
-		end = val.find(' jobs', start)
-		value = val[start:end].replace(',', '')
-		result = int(value)
-		# print(result)
-		return result
+			start = val.find('Page 1 of ') + 10
+			end = val.find(' jobs', start)
+			value = val[start:end].replace(',', '')
+			result = int(value)
+			# print(result)
+			return result
+		except:
+			return 0
 	except:
 		return 0
 

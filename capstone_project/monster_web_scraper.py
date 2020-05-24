@@ -13,15 +13,20 @@ def get_nums(url):
 	soup = BeautifulSoup(page.content, 'html.parser')
 
 	try:
-		jobs_figure = soup.find('h2', class_='figure')
-		values = jobs_figure.text.strip()
+		page = requests.get(url, headers=headers)
+		soup = BeautifulSoup(page.content, 'html.parser')
 
-		start = values.find('(') + 1
-		end = values.find(' Jobs', start)
-		value = values[start:end].replace(',', '')
-		# print(value)
-		result = int(value)
-		return result
+		try:
+			jobs_figure = soup.find('h2', class_='figure')
+			values = jobs_figure.text.strip()
+
+			start = values.find('(') + 1
+			end = values.find(' Jobs', start)
+			value = values[start:end].replace(',', '')
+			result = int(value)
+			return result
+		except:
+			return 0
 	except:
 		return 0
 
