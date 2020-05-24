@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 class City(models.Model):
     city_name = models.CharField(max_length=100)
+    col_index = models.IntegerField(default=0)
 
     def __str__(self):
         return self.city_name
@@ -49,3 +50,15 @@ class Languages(models.Model):
     postGreSql = models.IntegerField(default=0)
     redis = models.IntegerField(default=0)
     sqlite = models.IntegerField(default=0)
+
+class Salary(models.Model):
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    sweEnt = models.IntegerField(default=0)
+    sweMid = models.IntegerField(default=0)
+    sweExp = models.IntegerField(default=0)
+    webEnt = models.IntegerField(default=0)
+    webMid = models.IntegerField(default=0)
+    webExp = models.IntegerField(default=0)
+    dbaEnt = models.IntegerField(default=0)
+    dbaMid = models.IntegerField(default=0)
+    dbaExp = models.IntegerField(default=0)

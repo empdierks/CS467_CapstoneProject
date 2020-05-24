@@ -7,23 +7,15 @@ def get_nums(url):
 	headers = requests.utils.default_headers()
 	headers.update({
 			'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
-
 	})
 
 	page = requests.get(url, headers=headers)
 	soup = BeautifulSoup(page.content, 'html.parser')
 
-	#See if any matches in city
-	#job_match = soup.find('h1', class_='pivot block')
 	try:
 		jobs_figure = soup.find('h2', class_='figure')
 		values = jobs_figure.text.strip()
 
-		#https://www.kite.com/python/answers/how-to-extract-integers-from-a-string-in-python
-		# print(values)
-		# print(type(values))
-		# words = values.split()  #separates it into '(4', 'Jobs', 'Found)'
-		# return int(words[0][1])  #prints just 4
 		start = values.find('(') + 1
 		end = values.find(' Jobs', start)
 		value = values[start:end].replace(',', '')
@@ -32,23 +24,6 @@ def get_nums(url):
 		return result
 	except:
 		return 0
-
-	#if job_match.text.strip() == "Sorry, we didn't find any jobs matching your criteria":
-		#return 0
-
-
-	#elif job_match.text.strip() == "Sorry, we didn't find any jobs matching your criteria":
-		#return 0
-		#find all job links
-		#results = soup.find(id='ResultsContainer')
-		#job_elems = results.find_all('section', class_='card-content')
-
-		#finds all job links
-		#for job_elem in job_elems:
-			#link = job_elem.a
-			#if None == link:
-				#continue
-			#print(link.get('href'))
 
 
 def get_city_language_nums():
@@ -140,16 +115,5 @@ def main():
 #URL = 'https://www.monster.com/jobs/search/?q=sqlite-software&rad=5&where=Washington-DC&tm=30'
 #print(get_nums(URL))
 
-
-	#title_elem = job_elem.find('h2', class_='title')
-	#company_elem = job_elem.find('div', class_='company')
-	#location_elem = job_elem.find('div', class_='location')
-	#if None in (title_elem):
-		#continue
-	#print(title_elem.text.strip())
-	#print(company_elem.text.strip())
-	#print(location_elem.text.strip())
-	#print()
-	#print(job_elem, end='\n'*2)
 if __name__ == '__main__':
 	main()
