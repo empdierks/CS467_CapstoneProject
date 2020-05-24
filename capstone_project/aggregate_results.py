@@ -1,11 +1,11 @@
 import indeed_web_scraper as indeed
 import monster_web_scraper as monster
-import github_jobs_api_scraper as github
+# import github_jobs_api_scraper as github
 
 def combine_results():
 
 	indeed_jobs = indeed.get_language_city_count()
-	github_jobs = github.get_language_city_count()
+	# github_jobs = github.get_language_city_count()
 	monster_jobs = monster.get_city_language_nums()
 
 	combined_object = []
@@ -20,20 +20,28 @@ def combine_results():
 
 
 	for i in range(len(indeed_jobs)):
+
+		# Commented out all Github jobs to save time on scraping
 		cityObject = {}
 		indeed_dict = indeed_jobs[i]
-		github_dict = github_jobs[i]
+		# github_dict = github_jobs[i]
 		monster_dict = monster_jobs[i]
 
 		# print(indeed_dict)
 
-		if indeed_dict['cityName'] == github_dict['cityName'] == monster_dict['cityName']:
+		# if indeed_dict['cityName'] == github_dict['cityName'] == monster_dict['cityName']:
+		# 	city = indeed_dict['cityName']
+		# else:
+		# 	city = 'invalidCity'
+
+		
+		if indeed_dict['cityName'] == monster_dict['cityName']:
 			city = indeed_dict['cityName']
 		else:
 			city = 'invalidCity'
 
-		
-		if indeed_dict['langCounts'] and github_dict["langCounts"] and monster_dict['langCounts']:
+		# if indeed_dict['langCounts'] and github_dict["langCounts"] and monster_dict['langCounts']:
+		if indeed_dict['langCounts'] and monster_dict['langCounts']:
 			langCounts = {}
 			for j in range(len(pairs)):
 				language = pairs[j][0]
@@ -42,10 +50,11 @@ def combine_results():
 					indeed_language_result = indeed_dict['langCounts'][language]
 				except KeyError:
 					indeed_language_result = -10
-				try:
-					github_language_result = github_dict['langCounts'][language]
-				except KeyError:
-					github_language_result = -10
+				# try:
+				# 	github_language_result = github_dict['langCounts'][language]
+				# except KeyError:
+				# 	github_language_result = -10
+				
 				try:
 					monster_language_result = monster_dict['langCounts'][language]
 				except KeyError:
@@ -53,8 +62,10 @@ def combine_results():
 
 				monster_indeed_sum = indeed_language_result + monster_language_result
 				monster_indeed_avg = monster_indeed_sum//2
-				combined_language_result = monster_indeed_avg + github_language_result
-				langCounts[language] = combined_language_result
+				
+				# combined_language_result = monster_indeed_avg + github_language_result
+				# langCounts[language] = combined_language_result
+				langCounts[language] = monster_indeed_avg
 
 		
 		cityObject["cityName"] = city
@@ -67,8 +78,6 @@ def combine_results():
 
 
 def main():
-	# URL = "https://www.indeed.com/jobs?q=sql&l=New+York%2C+NY"
-	# https://www.indeed.com/jobs?q=python+software&l=Hartford%2C+CT
 	
 	combined_object = combine_results()
 	print(combined_object)

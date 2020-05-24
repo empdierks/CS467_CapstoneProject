@@ -28,7 +28,7 @@ def get_nums(url):
 
 def get_city_language_nums():
 
-	query_locations = ['Ann-Arbor-MI', 'Atlanta-GA', 'Austin-TX', 'Baltimore-MD', 'Boston-MA', 'Boulder-CO', 'Charlotte-NC', 'Charlottesville-VA', 'Chicago-IL', 'Cincinatti-OH',
+	query_locations = ['Ann-Arbor-MI', 'Atlanta-GA', 'Austin-TX', 'Baltimore-MD', 'Boston-MA', 'Boulder-CO', 'Charlotte-NC', 'Charlottesville-VA', 'Chicago-IL', 'Cincinnati-OH',
 	'Corvallis-OR', 'Dallas-TX', 'Detroit-MI','Fort-Collins-CO', 'Hartford-CT', 'Houston-TX', 'Ithaca-NY', 'Las-Vegas-NV', 'Los-Angeles-CA', 'Madison-WI', 'Miami-FL', 'Minneapolis-MN',
 	'New-Haven-CT','New-York-City-NY', 'Orlando-FL', 'Philadelphia-PA', 'Phoenix-AZ', 'Pittsburgh-PA', 'Portland-OR', 'Raleigh-NC', 'Riverside-CA', 'Sacramento-CA', 'San-Antonio-TX',
 	'San-Diego-CA', 'San-Francisco-CA', 'San-Jose-CA', 'Seattle-WA', 'Saint-Louis-MO', 'Tampa-FL', 'Washington-DC']
@@ -52,7 +52,7 @@ def get_city_language_nums():
 	('Redis','redis'),('SQLite','sqlite')]
 
 
-	locations = ['Ann Arbor', 'Atlanta', 'Austin', 'Baltimore', 'Boston', 'Boulder', 'Charlotte', 'Charlottesville', 'Chicago', 'Cincinatti',
+	locations = ['Ann Arbor', 'Atlanta', 'Austin', 'Baltimore', 'Boston', 'Boulder', 'Charlotte', 'Charlottesville', 'Chicago', 'Cincinnati',
 	'Corvallis', 'Dallas', 'Detroit','Fort Collins', 'Hartford','Houston', 'Ithaca', 'Las Vegas', 'Los Angeles', 'Madison', 'Miami', 'Minneapolis',
 	'New Haven','New York City', 'Orlando', 'Philadelphia', 'Phoenix', 'Pittsburgh', 'Portland', 'Raleigh', 'Riverside', 'Sacramento', 'San Antonio',
 	'San Diego', 'San Francisco', 'San Jose', 'Seattle', 'Saint Louis', 'Tampa', 'Washington DC']

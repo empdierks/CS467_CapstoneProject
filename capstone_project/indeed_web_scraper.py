@@ -28,8 +28,7 @@ def get_language_city_count():
 	'&l=Corvallis%2C+OR', '&l=Dallas%2C+TX', '&l=Detroit%2C+MI', '&l=Fort+Collins%2C+CO', '&l=Hartford%2C+CT', '&l=Houston%2C+TX', '&l=Ithaca%2C+NY', '&l=Las+Vegas%2C+NV', '&l=Los+Angeles%2C+CA', '&l=Madison%2C+WI', '&l=Miami%2C+FL', '&l=Minneapolis%2C+MN',
 	'&l=New+Haven%2C+CT', '&l=New+York+City%2C+NY', '&l=Orlando%2C+FL', '&l=Philadelphia%2C+PA', '&l=Phoenix%2C+AZ', '&l=Pittsburgh%2C+PA', '&l=Portland%2C+OR', '&l=Raleigh%2C+NC', '&l=Riverside%2C+CA', '&l=Sacramento%2C+CA', '&l=San+Antonio%2C+TX',
 	'&l=San+Diego%2C+CA','&l=San+Francisco%2C+CA', '&l=San+Jose%2C+CA', '&l=Seattle%2C+WA', '&l=St.+Louis%2C+MO', '&l=Tampa%2C+FL', '&l=Washington%2C+DC']
-	# city_array_actual = ['Portland', 'Tampa', 'Boston', 'Atlanta', 'Phoenix', 'San Diego','Ann Arbor', 'San Francisco', 'Jose', 'Seattle', 'Sacramento', 'San Antonio', 'Riverside', 'Raleigh', 'Pittsburgh','Philadelphia', 'Orlando', 'New York City', 'Minneapolis', 'Miami', 'Madison', 'Los Angeles', 'Las Vegas', 'Ithaca','Houston', 'Fort Collins', 'Durham', 'Detroit', 'Dallas', 'Corvallis', 'Cincinnati', 'Chicago', 'Charlottesville','Charlotte', 'Boulder', 'Baltimore', 'Austin']
-	# # lang_search_array = ["?q=python+software", "?q=sql+software", "?q=java+software", "?q=c+++software"]
+
 	l_search_array = ["?q=c+software", "?q=c+++software", "?q=c%23+software", "?q=flutter+software", "?q=go+software", "?q=haskell+software", 
 	"?q=html+css+software", "?q=java+software", "?q=javascript+software","?q=kotlin+software","?q=matlab+software",
 	"?q=objective+c+software","?q=perl+software", "?q=php+software","?q=python+software","?q=r+software","?q=ruby+software", 
@@ -53,9 +52,9 @@ def get_language_city_count():
     ('Vue.js','vue_js'),('MS SQL Server','ms_sql'),('MongoDB','mongoDB'),('MySQL','my_sql'),('PostGreSQL','postGreSql'),
     ('Redis','redis'),('SQLite','sqlite')]
 
-	# city_array_actual = ['Portland', 'Tampa', 'Boston', 'Atlanta', 'Phoenix']
-	# city_search_array = ['&l=Portland%2C+OR', '&l=Tampa%2C+FL', '&l=Boston%2C+MA', '&l=Atlanta%2C+GA', '&l=Phoenix%2C+AZ']
-
+	################################################
+	# Testing subset of data
+	################################################
 	# city_search_array = ['&l=Ann+Arbor%2C+MI', '&l=Atlanta%2C+GA', '&l=Austin%2C+TX']
 	# l_search_array = ['?q=c+software', '?q=c+++software', '?q=c%23+software', '?q=dart+software', '?q=go+software', '?q=haskell+software', '?q=html+css+software', '?q=java+software', '?q=javascript+software']
 	# pairs = [('C', 'c'), ('C++','C++'), ('C#', 'c#'), ('Dart', 'flutter'),('Go', 'go'), ('Haskell', 'haskell'),
