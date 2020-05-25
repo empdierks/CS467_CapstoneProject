@@ -19,7 +19,7 @@ def post_models(request):
     ('Vue.js','vue_js'),('MS SQL Server','ms_sql'),('MongoDB','mongoDB'),('MySQL','my_sql'),('PostGreSQL','postGreSql'),
     ('Redis','redis'),('SQLite','sqlite')]
 
-    job_roles = ['sweEnt', 'sweMid', 'sweExp', 'webEnt', 'webMid', 'webExp', 'dbaEnt', 'dbaMid', 'dbaExp']
+    job_roles = ['sweEnt', 'sweMid', 'sweSen', 'webEnt', 'webMid', 'webSen', 'dbaEnt', 'dbaMid', 'dbaSen']
 
     qs = list(Languages.objects.select_related('city').values(
         'city__city_name','city__col_index', 'c', 'c_plus', 'c_sharp', 'dart', 'go', 'haskell', 'html_css', 'java',
@@ -29,7 +29,7 @@ def post_models(request):
         'my_sql','postGreSql', 'redis', 'sqlite'))
 
     salary_qs = list(Salary.objects.select_related('city').values(
-        'city__city_name', 'sweEnt', 'sweMid', 'sweExp', 'webEnt', 'webMid', 'webExp', 'dbaEnt', 'dbaMid', 'dbaExp'
+        'city__city_name', 'sweEnt', 'sweMid', 'sweSen', 'webEnt', 'webMid', 'webSen', 'dbaEnt', 'dbaMid', 'dbaSen'
     ))
 
     converted_list = [] #completed list of dictionary values [{cityName: value, COLidx: value, langCounts:{}, MedSalaries:{} }]
@@ -43,8 +43,10 @@ def post_models(request):
         for key in d:
             if key == 'city__city_name':
                 city_dict['cityName'] = d[key]
+                print(d[key])
             elif key == 'city__col_index':
                 city_dict['COLidx'] = d[key]
+                print(d[key])
             else:
                 for p in pairs:
                     if key in p:
@@ -62,7 +64,7 @@ def post_models(request):
                 break
 
         converted_list.append(city_dict)
-
+    #print(converted_list)
     #qs_names = list(City.objects.values())
     #qs_langs = list(Languages.objects.values())
     #lang = list(Languages.objects.values()) # values() creates querySet like iterable dictionary

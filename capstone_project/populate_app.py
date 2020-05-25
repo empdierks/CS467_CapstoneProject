@@ -22,7 +22,7 @@ def populate():
 
 	for c in city_actual:
 		#create City Table
-		cityName = City.objects.get_or_create(city_name = c, col_index = city_actual[c])[0]
+		cityName = City.objects.update_or_create(city_name = c, col_index = city_actual[c])[0]
 
 		#create fake Salary table
 		fake_sweE = fake.random_int(60000, 70000)
