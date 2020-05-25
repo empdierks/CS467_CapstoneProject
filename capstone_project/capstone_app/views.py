@@ -43,10 +43,8 @@ def post_models(request):
         for key in d:
             if key == 'city__city_name':
                 city_dict['cityName'] = d[key]
-                print(d[key])
             elif key == 'city__col_index':
                 city_dict['COLidx'] = d[key]
-                print(d[key])
             else:
                 for p in pairs:
                     if key in p:
@@ -64,7 +62,6 @@ def post_models(request):
                 break
 
         converted_list.append(city_dict)
-    #print(converted_list)
     #qs_names = list(City.objects.values())
     #qs_langs = list(Languages.objects.values())
     #lang = list(Languages.objects.values()) # values() creates querySet like iterable dictionary
