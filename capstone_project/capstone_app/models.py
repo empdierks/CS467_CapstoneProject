@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class City(models.Model):
     city_name = models.CharField(max_length=100)
-    col_index = models.IntegerField(default=0)
+    col_index = models.DecimalField(max_digits = 4, decimal_places =3)
 
     def __str__(self):
         return self.city_name
@@ -55,10 +55,10 @@ class Salary(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     sweEnt = models.IntegerField(default=0)
     sweMid = models.IntegerField(default=0)
-    sweExp = models.IntegerField(default=0)
+    sweSen = models.IntegerField(default=0)
     webEnt = models.IntegerField(default=0)
     webMid = models.IntegerField(default=0)
-    webExp = models.IntegerField(default=0)
+    webSen = models.IntegerField(default=0)
     dbaEnt = models.IntegerField(default=0)
     dbaMid = models.IntegerField(default=0)
-    dbaExp = models.IntegerField(default=0)
+    dbaSen = models.IntegerField(default=0)
