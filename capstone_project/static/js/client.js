@@ -8,15 +8,9 @@ let createMap = () => {
         .append("p")
             .html("No jobs in any city!")
             .attr("id","top-cities-error-msg")
-            .attr("class", "text-center invisible error-msg");      // not visible by default; use Bootstrap class 'invisible' b/c overrides manual setting
+            .attr("class", "text-center invisible error-msg");      // not visible by default -- use Bootstrap class 'invisible' b/c overrides manual setting
  
     let mapArea = d3.select("#map-area");
- 
-    // no jobs in any city error message       
-    // mapArea.append("p")
-          // .html("No jobs in any city!")
-          // .attr("id","top-cities-error-msg")
-          // .attr("class", "text-center invisible error-msg");      // not visible by default; use Bootstrap class because overrides manual setting
     
     // svg container for map
     const mapW = 800, mapH = 550;                        // std map dims per documentation, trimmed to reduce whitespace
@@ -103,6 +97,7 @@ let createMap = () => {
 let resetMap = () => {
     // reset states
     d3.selectAll(".state-path")
+        .classed("state-active", false)
         .classed("state-default", true);
 
     // reset cities
@@ -126,14 +121,14 @@ let createMapResetBtn = () => {
             .attr("id", "master-reset-btn")
             .attr("class", "btn btn-secondary btn-sm")
             .html("Reset Map")
-        .on("click", () => {
-            d3.event.preventDefault();
-            d3.event.stopPropagation();
-            resetMap();
-            // reset lang menu
-            d3.selectAll("#ul-lang-sublist .sublist-item")
-                .classed("font-weight-bolder", false);
-        });
+            .on("click", () => {
+                d3.event.preventDefault();
+                d3.event.stopPropagation();
+                resetMap();
+                // reset lang menu
+                d3.selectAll("#ul-lang-sublist .sublist-item")
+                    .classed("font-weight-bolder", false);
+            });
 };
 
 
@@ -235,7 +230,7 @@ let createTechListCats = () => {
         .append("ul")
             .attr("class", "list-group")
         .selectAll("li")
-        .data([...new Set(langFull.map((obj) => obj.category))])   // distinct set of tech categories (language, framework, etc.)
+        .data([...new Set(allTechs.map((obj) => obj.category))])   // distinct set of tech categories (language, framework, etc.)
         .enter()
         .append("li")
             .text((d) => `${d}s`)
@@ -250,9 +245,10 @@ let createTechListCats = () => {
 
 // creates explore-by-tech menu (as list): sublists of languages, frameworks, etc. within each category
 let createTechListSubLists = (citiesData) => {
+    // for each top level category
     d3.select("#lang-list-area").selectAll("li")
         // div container for sublist (for smoother collapse)
-        .append("div")                                               // contains sublist for smoother collapse effect
+        .append("div")  
             .attr("id", (d) => "div-lang-sublist" + d)               // d still refers to tech categories
             .attr("class", "container-fluid" )
             .attr("class", (d) => (d === "language") ? "collapse show" : "collapse" )    // only Languages section uncollapsed by default
@@ -267,10 +263,10 @@ let createTechListSubLists = (citiesData) => {
                 d3.event.stopPropagation();
             })
         .selectAll("li")
-        .data((d) => langFull.filter((obj) => obj.category === d)   // rebind data: alpha asc-sorted array of tech objs from current category
+        .data((d) => allTechs.filter((obj) => obj.category === d)   // rebind data: alpha asc-sorted array of tech objs from current category
                              .map((obj) => obj.name)
-                             .sort()                               
-        )                              
+                             .sort()
+        )                                                      
         .enter()
         .append("li")
             .text((d) => d)
@@ -289,7 +285,6 @@ let createTechListSubLists = (citiesData) => {
                   .classed("font-weight-bolder", false);
                 d3.select(this)
                   .classed("font-weight-bolder", true);
-
                 showTopCities(d, citiesData);
             });
 };
@@ -303,11 +298,11 @@ let showTopCities = (techName, citiesData) => {
         .attr("visibility", "hidden");
 
     // top cities
-    const numCities = 5;    
+    const numCities = 10;    
     let citiesDataByLangPop = citiesData.slice(0)                                // don't sort in place!!  
         .sort((a, b) => b.langCounts[techName] - a.langCounts[techName])         // sort cities desc by specified techName count
         .slice(0, numCities);                                                    // keep top cities only
-    let topCities = citiesDataByLangPop.map((obj) => ({ cityName:obj.cityName, langCount:obj.langCounts[techName]})); // create array of city, count objs: [ {cityName:"Ann Arbor", langCount:145}, ... ]
+    let topCities = citiesDataByLangPop.map((obj) => ({ cityName:obj.cityName, langCount:obj.langCounts[techName]})); // [ {cityName:"Ann Arbor", langCount:145}, ... ]
     // drop cities w/ 0 or negative counts
     for (i = topCities.length - 1; i >= 0; i--) {                         
         if (topCities[i].langCount < 1)
@@ -320,13 +315,14 @@ let showTopCities = (techName, citiesData) => {
     if (!topCities.length) {
         noJobsMsg.classed("invisible", false);   
     }
+    
     // otherwise, show top cities   
     else {
         // re-hide error message
         noJobsMsg.classed("invisible", true);          
         
         // get color associate w tech -- done here so only selected 1x
-        let langColor = langFull.find((obj) => obj.name === techName)
+        let langColor = allTechs.find((obj) => obj.name === techName)
             .color;  
         
         // top city circles
@@ -361,7 +357,8 @@ let showTopCities = (techName, citiesData) => {
 
 
 // creates unchanging elements for explore-by-location area
-let createCityDataArea = () => {     
+let createCityDataArea = () => {
+    // div container for entire area    
     let cityDataArea = d3.select("#city-data-area")
         .append("div")
             .attr("class", "card");
@@ -370,9 +367,10 @@ let createCityDataArea = () => {
     cityDataArea.append("h6")
         .attr("id", "city-data-header")
         .attr("class", "card-header text-center city-header border-bottom-0");    // avoid redundant border 
-    
-    // section: salary info
-    // div container for whole salary area
+   
+   
+    // Salary Info section
+    // div container for salary area
     let salariesArea = cityDataArea.append("div")
         .attr("class", "card-body border-top");
     
@@ -381,43 +379,67 @@ let createCityDataArea = () => {
         .attr("id", "salary-info-header")
         .attr("class", "card-text text-left city-data-top-title clickable")
         .attr("data-toggle","collapse")                        // bootstrap collapse effect
-        .attr("data-target", "#div-salaries-list")  
-        .html("Median Salaries");
+        .attr("data-target", "#div-salary-contents")  
+        .text("Median Salaries");
     
-    // div container for salaries list
-    let salListDiv = salariesArea.append("div")
-        .attr("id", "div-salaries-list")
-        .attr("class", "container-fluid collapse show");
+    // div container for buttons & list (for smoother collapse)
+    let SalContents = salariesArea.append("div")
+        .attr("id", "div-salary-contents")
+        .attr("class", "collapse show");
         
-    // for each job title, div containing pair of rows (reg & adjusted salary) w 2x cols each
-    let jobTitles = ["Software Engineer I", "Software Engineer III", "Software Engineer V"];
-    let salLine = salListDiv.selectAll("div")
-        .data(jobTitles)
+    // job level filter buttons
+    const jobTitleFilterBtns = [
+        { title:"Entry", html:" <strong>I</strong> ", rMargin:"mr-3", level:"ent" },
+        { title:"Mid", html:"<strong>III</strong>", rMargin:"mr-3", level:"mid" },
+        { title:"Senior", html:" <strong>V</strong> ", rMargin:"", level:"sen" },
+    ];
+    let jobLevBtnGroup = SalContents.append("div")
+        .attr("id", "div-job-lev-btn-group")
+        .attr("class", "btn-group-sm text-center filter-btn-group")
+        .attr("role", "group");        
+    jobLevBtnGroup.selectAll("button")
+       .data(jobTitleFilterBtns)
+       .enter()
+       .append("button")
+            .attr("class", (d) => `btn btn-secondary ${d.rMargin} filter-button icon-button`)
+            .attr("title", (d) => `${d.title}`)
+            .attr("data-toggle", "tooltip")       // tooltip text content initially defaults to title attr
+            .attr("data-placement", "top")
+            .html((d) => `${d.html}`)
+            .on("click", (d) => updateSalaries(`${d.level}`));
+
+    // div container for salaries list
+    let salList = SalContents.append("div")
+        .attr("id", "div-salaries-list")
+        .attr("class", "container-fluid");
+
+    // for each job title, div containing pair of rows (reg & adjusted salary) w 2x cols each (job title & salary amt)
+    const jobLevels = ["I", "III", "V"];
+    let salLine = salList.selectAll("div")
+        .data(jobLevels)
         .enter()
         .append("div")
             .attr("class", "div-sal-pair");
    
-   // reg salary
+   // reg salary lines
     let regSalRow = salLine.append("p")
         .attr("class", "row no-gutters reg-sal-row");
     regSalRow.append("span")
-        .attr("class", "col-7 text-left sal-list-job-title")
-        .html((d) => d);
+        .attr("class", "col-7 text-left font-weight-bold sal-list-job-title");
     regSalRow.append("span")
-        .attr("id", (d,i) => `sal-for-job-${i + 1}`)
         .attr("class", "col-4 text-right font-italic font-weight-bold sal-list-salary");
     
-    // adjusted salary
+    // adjusted salary lines
     let adjSalRow = salLine.append("p")
         .attr("class", "row no-gutters adj-sal-row");   
     adjSalRow.append("span")
         .attr("class", "col-8 text-left sal-list-adj-text")
-        .html("Adjusted for cost of living");
+        .text("Adjusted for cost of living");
     adjSalRow.append("span")
-        .attr("id", (d,i) => `adj-sal-for-job-${i + 1}`)
-        .attr("class", "col-3 text-right sal-list-adj-salary");    
-
-    // section: most popular techs
+        .attr("class", "col-3 text-right sal-list-adj-salary");
+       
+       
+    // Most Popular Techs section
     // div container for all chart elements
     let techPopChartArea = cityDataArea.append("div")
         .attr("id", "div-tech-pop-chart-area")
@@ -428,26 +450,26 @@ let createCityDataArea = () => {
         .attr("class", "card-text text-left city-data-top-title clickable")
         .attr("data-toggle","collapse")                        // bootstrap collapse effect
         .attr("data-target", "#div-tech-pop-contents")  
-        .html("Most Popular Technologies"); 
+        .text("Most Popular Technologies"); 
     
     // div cont for buttons & chart (for smoother collapse)
     let techPopContents = techPopChartArea.append("div")
         .attr("id", "div-tech-pop-contents")
         .attr("class", "collapse show");
     
-    // filter buttons
-    let buttonGroup = techPopContents.append("div")
-        .attr("id", "div-filter-btn-group")
-        .attr("class", "btn-group-sm text-center")
-        .attr("role", "group");       
-    let filterButtons = [
-        { title:"All Technologies", html:"All", rMargin:"mr-3", category:"" },      // no category; get counts for all techs 
+    // tech pop filter buttons      
+    const techPopFilterBtns = [
+        { title:"All Technologies", html:"<strong>All</strong>", rMargin:"mr-3", category:"" },      // no category -- get counts for all techs 
         { title:"Languages", html:'<i class="fas fa-terminal"></i>', rMargin:"mr-3", category:"language" },
-        { title:"Frameworks", html:'<i class="far fa-square"></i>', rMargin:"mr-3", category:"framework" },
+        { title:"Frameworks", html:'<strong><i class="far fa-square"></i></strong>', rMargin:"mr-3", category:"framework" },
         { title:"Databases", html:'<i class="fas fa-database"></i>', rMargin:"", category:"database" },
     ];
-    buttonGroup.selectAll("button")
-       .data(filterButtons)
+    let techPopBtnGroup = techPopContents.append("div")
+        .attr("id", "div-tech-pop-btn-group")
+        .attr("class", "btn-group-sm text-center filter-btn-group")
+        .attr("role", "group"); 
+    techPopBtnGroup.selectAll("button")
+       .data(techPopFilterBtns)
        .enter()
        .append("button")
             .attr("class", (d) => `btn btn-secondary ${d.rMargin} filter-button icon-button`)
@@ -459,7 +481,7 @@ let createCityDataArea = () => {
     
     // error message for all-0 counts
     techPopContents.append("p")
-        .html("No jobs for this category!")
+        .text("No jobs for this category!")
         .attr("id","tech-pop-error-msg")
         .attr("class", "text-center d-none error-msg");     // hide error msg by default
     
@@ -467,7 +489,8 @@ let createCityDataArea = () => {
     let techChartRow = techPopContents.append("div")
        .attr("id", "div-tech-pop-chart-legend-row")
        .attr("class", "row justify-content-center align-items-center");            // center and vert align chart & legend
-    // div & svg containers for donut chart
+   
+   // div & svg containers for donut chart
     const chartW = 300, chartH = 300;
     techChartRow.append("div")
             .attr("id", "div-tech-pop-chart")
@@ -476,7 +499,8 @@ let createCityDataArea = () => {
             .attr("id", "svg-tech-pop-chart")
             .attr("preserveAspectRatio", "xMinYMin meet")                           // allows responsive resize of svg
             .attr("viewBox", `${-chartW/2}, ${-chartH/2}, ${chartW}, ${chartH}`);   // center   
-    // div container for legend
+   
+   // div container for legend
     techChartRow.append("div")
             .attr("id", "div-tech-pop-legend")
             .attr("class", "col-sm-4")
@@ -484,17 +508,21 @@ let createCityDataArea = () => {
             .attr("id", "ul-tech-pop-legend")
             .attr("class", "list-group");
             
-    // initialize tooltips        
-    $("#div-filter-btn-group").find('[data-toggle="tooltip"]').tooltip({trigger:"hover"});
+    // initialize tooltips   
+    $("#div-job-lev-btn-group").find('[data-toggle="tooltip"]').tooltip({trigger:"hover"});    
+    $("#div-tech-pop-btn-group").find('[data-toggle="tooltip"]').tooltip({trigger:"hover"});
 };
 
 
 // displays contents of explore-by-location area incl. redrawing donut chart
-let showCityData = (cityName, citiesData) => {
-    
-    // TODO -- add transitions to text?
-       
-    resetMap(); 
+let showCityData = (cityName, citiesData) => {     
+    resetMap();
+    d3.selectAll("#ul-lang-sublist .sublist-item")
+        .classed("font-weight-bolder", false);
+
+    // get data for current city 
+    let currCityObj = citiesData.find((obj) => obj.cityName === cityName);
+    console.log(currCityObj);                           // TODO -- DELETE ME
 
     // highlight current city on map
     const bubbleTransT = 300;
@@ -508,55 +536,96 @@ let showCityData = (cityName, citiesData) => {
         .transition()
             .duration(bubbleTransT)
             .attr("r", defaultR)
-            .style("stroke-dasharray", "2,2");
-            
-    // get data for current city 
-    let currCityObj = citiesData.find((obj) => obj.cityName === cityName);
-    console.log(currCityObj);                           // TODO -- DELETE ME
-    
+            .style("stroke-dasharray", "2,2")
+        // highlight corresponding state
+        .each((d) => {
+            d3.select(`.state-path[value="${d.state}"]`)
+            .classed("state-default", false)
+            .classed("state-active", true);
+        });
+          
     // change city name
+    const fadeOutT = 200, fadeInT = 800;
     d3.select("#city-data-header")
-      .datum(currCityObj)              // store city data object for retrieval by filter buttons
-      .html(currCityObj.cityName);   
-    
-    // DELETE ME
-    let pretendCOLIdxs = [];
-    
-    // display med salaries & calculated adjusted salaries
-    let moneyFormat = d3.format("$,d");
-    d3.select("#sal-for-job-1")
-      .html(moneyFormat(100000));
-    d3.select("#sal-for-job-2")
-      .html(moneyFormat(100000));    
-    d3.select("#sal-for-job-3")
-      .html(moneyFormat(100000));
-    d3.select("#adj-sal-for-job-1")
-      .html(moneyFormat(90000));
-    d3.select("#adj-sal-for-job-2")
-      .html(moneyFormat(90000));
-    d3.select("#adj-sal-for-job-3")
-      .html(moneyFormat(90000));
-
-    // when city first clicked, make donut chart w/ no category filtering
-    updateTechPopChart("");    
+        .datum(currCityObj)              // store city data object for retrieval by filter buttons
+        .transition()
+            .duration(fadeOutT)
+            .style("color", "#F7F7F7")
+        .transition()
+            .duration(fadeInT)
+            .style("color", "#212529")
+            .text(currCityObj.cityName);
+        
+    // show salaries & tech popularity
+    updateSalaries("ent");              // by default, entry level salaries
+    updateTechPopChart("");             // by default, no filtering on donut chart
+   
 };
 
 
+// updates job titles (names and levels), regular salaries, & adjusted salaries based on specified job level
+let updateSalaries = (level) => {
+    const jobs = [                      // arrays used to guarantee ordering
+        ["Software Engineer", "swe"], 
+        ["Web Developer", "web"], 
+        ["Database Admin", "dba"]
+    ]; 
+     
+    // get city data object bound to header
+    let currCityObj = d3.select("#city-data-header").datum();
+   
+    // current city's salaries & cost of living index
+    let medSalsArr = Object.entries(currCityObj.medSalaries);               // [ [sweEnt, 100000], [webEnt, 90000], ... ]
+    let currCOLidx = currCityObj.COLidx;
+
+    // filter salaries by level & apply custom ordering
+    let salsCustOrd = [];
+    for (let i = 0, len = jobs.length; i < len; i++) {
+        let titleAndSal = medSalsArr.find((sal) => {                        
+            let title = sal[0].toLowerCase();                               // get property name from salaries list
+            return title.includes(jobs[i][1]) && title.includes(level);     // match job abbreviation & level
+        });
+        salsCustOrd.push(titleAndSal);
+    }   
+    
+    // change job titles
+    d3.selectAll(".sal-list-job-title")
+        .data(jobs)
+        .text((d) => {
+            let romNum = "";
+            if (level === "ent")
+                romNum = "I";
+            else if (level === "mid")
+                romNum = "III";
+            else if (level === "sen")
+                romNum = "V";
+            return `${d[0]} ${romNum}`    // d[0] is full job name from jobs list above
+        });
+      
+    // change median & adjusted salaries
+    let moneyFormat = d3.format("$,d");   // also rounds to int   
+    d3.selectAll(".sal-list-salary")
+        .data(salsCustOrd)
+        .text((d) => (d[1] > 1000) ? moneyFormat(d[1]) : "no data");
+    d3.selectAll(".sal-list-adj-salary")
+        .data(salsCustOrd)
+        .text((d) => (d[1] > 1000) ? moneyFormat(d[1]/currCOLidx) : "no data");   // adjusted sal = actual / cost of living index (as decimal)   (e.g., 100,000 / 1.12) 
+}
+
 
 // updates tech pop donut chart with tech counts from specified category (or from all categories if passed empty string)
-let updateTechPopChart = (techCat) => {
-    
+let updateTechPopChart = (techCat) => {    
     // get langCounts via city data object bound to header
     let langCounts = d3.select("#city-data-header")
         .datum()
         .langCounts;    
     
     // get names of techs in specified category, or all if no category specified
-    let arrTechsInCat = ((techCat.length) ? langFull.filter((obj) => obj.category === techCat) : langFull) 
+    let arrTechsInCat = ((techCat.length) ? allTechs.filter((obj) => obj.category === techCat) : allTechs)
                             .map((obj) => obj.name);
 
     // sort technologies by counts
-    const numTechs = 5;    
+    const numTechs = 8;    
     let techsByPop = Object.entries(langCounts)
                            .filter((e) => arrTechsInCat.includes(e[0]))       // tech name is on category list
                            .sort((a, b) => b[1] - a[1])                       // sort techs desc by count
@@ -604,15 +673,15 @@ let updateTechPopChart = (techCat) => {
 
         // wedge paths
         let techPopSvg = d3.select("#svg-tech-pop-chart");
-        techPopSvg.selectAll("path")            // completely remove existing paths (b/c enter-update-exit hangs on to some old wedges?)
+        techPopSvg.selectAll("path")            // completely remove existing paths (b/c enter-update-exit hangs on to some old wedges)
             .remove();
         techPopSvg.selectAll("path")            // reselect to create new
-            .data(donutAngles)                  // console.log(d3.select(".donut-wedge-path").data());
+            .data(donutAngles)
             .enter()
             .append("path")
                 .attr("d", donutArc)
                 .attr("class", "donut-wedge-path")
-                .attr("fill", (d) => langFull.find((obj) => obj.name === d.data.name).color)
+                .attr("fill", (d) => allTechs.find((obj) => obj.name === d.data.name).color)
                 // animation from: http://www.adeveloperdiary.com/d3-js/create-a-simple-donut-chart-using-d3-js/
                 .transition()
                     .duration(donutTransT)
@@ -642,7 +711,7 @@ let updateTechPopChart = (techCat) => {
         techPopLegendItems.enter()
             .append("i")
                 .attr("class", "list-group-item border-0 fas fa-square legend-item legend-square")
-                .style("color", (d) => langFull.find((obj) => obj.name === d.name).color)
+                .style("color", (d) => allTechs.find((obj) => obj.name === d.name).color)
             .append("span")
                 .classed("fas fa-square", false)
                 .attr("class", "legend-text")
@@ -650,8 +719,6 @@ let updateTechPopChart = (techCat) => {
         techPopLegendItems.exit().remove();
     }    
 };
-
-
 
 
 // creates national annual rankings charts
@@ -674,7 +741,7 @@ let createNationalCharts = () => {
         { name:"R", rankings:[[2019,5]] }
     ];
     
-    const langColors = {        // some langs not on main list or need different colors
+    const langColors = {        // some langs not on main list or require alt colors to differentiate
         JavaScript:"#F7DF1E",
         SQL:"#6D409C",
         "HTML-CSS":"#F16529",    
@@ -683,7 +750,7 @@ let createNationalCharts = () => {
         "C#":"#A179DC",
         C:"#7F8B99",
         "C++":"#75A3CE",
-        R:"#2165B6"
+        R:"#1C5397"
     };
 
     // div container for 2x chart areas
@@ -692,20 +759,20 @@ let createNationalCharts = () => {
 
     // div row of 2 cols for chart titles (so centered across chart-legend pairs)
     let natChartTitlesRow = natTrendsArea.append("div")
-        .attr("class", "row");   
+        .attr("class", "row no-gutters");   
     let soChartTitleDiv = natChartTitlesRow.append("div")
         .attr("class", "col-6");            
     let ieeeChartTitleDiv = natChartTitlesRow.append("div")
         .attr("class", "col-6");      
 
-    // div row of 4 cols for 2x chart+legend
+    // div row of 4 cols for 2x chart-legend pairs
     let natChartsRow = natTrendsArea.append("div")
         .attr("id", "div-nat-charts-row")
-        .attr("class", "row align-items-center");                                   // vertically align charts & legends (centered)  
+        .attr("class", "row align-items-center");      // vertically align charts & legends (centered)  
     let soChartDiv = natChartsRow.append("div")
         .attr("class", "col-4");
     let soChartLegDiv = natChartsRow.append("div")
-        .attr("class", "col-2 list-group small-legend-container");            
+        .attr("class", "col-2 list-group small-legend-container left-legend"); 
     let ieeeChartDiv = natChartsRow.append("div")
         .attr("class", "col-4");   
     let ieeeChartLegDiv = natChartsRow.append("div")
@@ -716,7 +783,7 @@ let createNationalCharts = () => {
     const defCircleR = 5;               // default circle size for both
     
     // Stack Overflow rankings chart
-    // title
+    // title & subtitle
     soChartTitleDiv.append("h6")
         .html("Stack Overflow Developer Survey")
         .attr("class", "text-center chart-title");
@@ -785,7 +852,7 @@ let createNationalCharts = () => {
 
 
     // IEEE rankings chart
-    // title
+    // title & subtitle
     ieeeChartTitleDiv.append("h6")
         .html("IEEE Spectrum App")
         .attr("class", "text-center chart-title");
@@ -840,52 +907,152 @@ let createNationalCharts = () => {
 };
 
 
-const langFull = [
-    { name:"C", category:"language", color:"#7F8B99", sector:["embedded", "enterprise"] },
-    { name:"C++", category:"language", color:"#5C8DbC", sector:["embedded", "enterprise"] },
-    { name:"C#", category:"language", color:"#A179DC", sector:["embedded", "enterprise", "mobile", "web"] },
-    { name:"Dart", category:"language", color:"#00D2B8", sector:["mobile", "web"] },
-    { name:"Go", category:"language", color:"#00ACD7", sector:["enterprise", "web"] },
-    { name:"Haskell", category:"language", color:"#5E5086", sector:["enterprise", "web"]},
-    { name:"HTML-CSS", category:"language", color:"#F16529", sector:["web"] },
-    { name:"Java", category:"language", color:"#C74634", sector:["enterprise", "mobile", "web"] },
-    { name:"JavaScript", category:"language", color:"#F7DF1E", sector:["mobile", "web"] },
-    { name:"Kotlin", category:"language", color:"#806EE3", sector:["mobile", "web"] },
-    { name:"MatLab", category:"language", color:"#1A6CFF", sector:["enterprise"] },
-    { name:"Objective-C", category:"language", color:"#F1592A", sector:["mobile"] },
-    { name:"Perl", category:"language", color:"#3A3C5B", sector:["enterprise", "web"] },
-    { name:"PHP", category:"language", color:"#6181B6", sector:["web"] },
-    { name:"Python", category:"language", color:"#387EB8", sector:["embedded", "enterprise", "web"] },
-    { name:"R", category:"language", color:"#2165B6", sector:["embedded", "enterprise"] },
-    { name:"Ruby", category:"language", color:"#D11C0C", sector:["enterprise", "web"] },
-    { name:"Rust", category:"language", color:"#000000", sector:["embedded", "enterprise", "web"] },
-    { name:"Scala", category:"language", color:"#FF0000", sector:["enterprise", "mobile", "web"] },
-    { name:"Swift", category:"language", color:"#F98039", sector:["enterprise", "mobile"] },
-    { name:"TypeScript", category:"language", color:"#007ACC", sector:["mobile", "web"] },
-    { name:"Visual Basic", category:"language", color:"#004E8C", sector:["enterprise"] },
+// creates 2x modals with add'l explanation about data sources, etc. -- text triggers created in .html file
+let createInfoModals = () => {
+    // Explore-by-Location modal
+    let eblModalContent = d3.select("#explore-by-loc")
+        .append("div")
+            .attr("class", "modal fade")
+            .attr("id", "ebl-info-modal")
+            .attr("tabindex", "-1")
+            .attr("role", "dialog")
+            .attr("aria-hidden", true)
+        .append("div")
+            .attr("class", "modal-dialog")
+            .attr("role", "document")
+        .append("div")
+            .attr("class", "modal-content");    
+    
+    let eblModalHeader = eblModalContent.append("div")
+        .attr("class", "modal-header");
+    eblModalHeader.append("h5")
+        .attr("class", "modal-title")
+        .text("Additional Information");
+    eblModalHeader.append("button")
+            .attr("type", "button")
+            .attr("class", "close")
+            .attr("data-dismiss", "modal")
+            .attr("aria-label", "Close")
+        .append("span")
+            .attr("aria-hidden", "true")
+            .html("&times;");
+            
+    let eblModalBody = eblModalContent.append("div")
+        .attr("class", "modal-body text-justify")
+        .html("<strong>Cities</strong>: Cities comprise US metros and smaller cities with strong tech presence.<br /> \
+               Cities highlighted with a ring on the map are major tech hubs. \
+               (<i>sources</i>: \
+               <a href='https://en.wikipedia.org/wiki/List_of_metropolitan_statistical_areas'>Wikipedia</a>, \
+               <a href='https://www.hiringlab.org/2019/04/18/tech-hubs-2019/'>Indeed Hiring Lab</a>)\
+               <br /><br />\
+               <strong>Salaries</strong>: Salaries are the median salaries for each listed job title. \
+               (<i>source</i>: <a href='https://www.salary.com/research/salary'>Salary.com</a>)<br /> \
+               Adjusted salaries are median salaries adjusted by a city's cost of living index, which is the \
+               percentage above/below the national average in decimal form. \
+               (<i>source</i>: <a href='https://www.salary.com/research/cost-of-living'>Salary.com</a>) \
+               <br /><br />\
+               <strong>Technologies</strong>: Technology popularity is determined by the number of job postings which explicitly \
+               request familiarity with a specific technology (e.g., Python, node.js), averaged across job posting \
+               sources.\
+               (<i>sources</i>: \
+               <a href='https://www.monster.com'>Monster</a>, \
+               <a href='https://www.indeed.com/'>Indeed</a>)<br />\
+               For a selected city, the 8 most-requested technologies in each category are displayed (6 for Databases). \
+               Fewer technologies may be appear in the chart if job counts of zero are numerous."
+        );
+                             
+    // Explore-by-Technology modal
+    let ebtModalContent = d3.select("#explore-by-tech")
+        .append("div")
+            .attr("class", "modal fade")
+            .attr("id", "ebt-info-modal")
+            .attr("tabindex", "-1")
+            .attr("role", "dialog")
+            .attr("aria-hidden", true)
+        .append("div")
+            .attr("class", "modal-dialog")
+            .attr("role", "document")
+        .append("div")
+            .attr("class", "modal-content");    
+    
+    let ebtModalHeader = ebtModalContent.append("div")
+        .attr("class", "modal-header");
+    ebtModalHeader.append("h5")
+        .attr("class", "modal-title")
+        .text("Additional Information");
+    ebtModalHeader.append("button")
+            .attr("type", "button")
+            .attr("class", "close")
+            .attr("data-dismiss", "modal")
+            .attr("aria-label", "Close")
+        .append("span")
+            .attr("aria-hidden", "true")
+            .html("&times;");
+            
+    let ebtModalBody = ebtModalContent.append("div")
+        .attr("class", "modal-body")
+        .html("<strong>Cities</strong>: Cities comprise US metros and smaller cities with strong tech presence.<br /> \
+               Cities highlighted with a ring on the map are major tech hubs. \
+               (<i>sources</i>: \
+               <a href='https://en.wikipedia.org/wiki/List_of_metropolitan_statistical_areas'>Wikipedia</a>, \
+               <a href='https://www.hiringlab.org/2019/04/18/tech-hubs-2019/'>Indeed Hiring Lab</a>)\
+               <br /><br />\
+               <strong>Technologies</strong>: Technology demand is determined by the number of job postings which explicitly \
+               request familiarity with a specific technology (e.g., Python, node.js), averaged across job posting \
+               sources. \
+               (<i>sources</i>: \
+               <a href='https://www.monster.com'>Monster</a>, \
+               <a href='https://www.indeed.com/'>Indeed</a>)<br /> \
+               For each technology, the 10 cities with the greatest demand for that technology are displayed. \
+               Fewer than 10 cities may be highlighted in the case of less popular technologies."
+        );
+}
 
-    { name:"ASP.NET", category:"framework", color:"#6D409C", sector:["mobile", "web"] },     // TODO -- sectors not accurate for frameworks or DBs
-    { name:"Angular", category:"framework", color:"#E23237", sector:["web"] },
-    { name:"Bootstrap", category:"framework", color:"#563D7C", sector:["mobile", "web"] },
-    { name:"Django", category:"framework", color:"#2BA977", sector:["web"] },
-    { name:"Ember", category:"framework", color:"#E24B31", sector:["web"] },
-    { name:"Flask", category:"framework", color:"#000000", sector:["web"] },
-    { name:"Laravel", category:"framework", color:"#FF2D20", sector:["web"] },
-    { name:"Node.js", category:"framework", color:"#539E43", sector:["mobile", "web"] },
-    { name:"Rails", category:"framework", color:"#CC0000", sector:["mobile", "web"] },
-    { name:"React", category:"framework", color:"#00D8FF", sector:["web"] },
-    { name:"Spring", category:"framework", color:"#6DB33F", sector:["web"] },
-    { name:"Vue.js", category:"framework", color:"#41B883", sector:["web"] },
 
-    { name:"MS SQL Server", category:"database", color:"#D11C0C", sector:[] },
-    { name:"MongoDB", category:"database", color:"#10AA50", sector:[] },
-    { name:"MySQL", category:"database", color:"#00546B", sector:[] },
-    { name:"PostGreSQL", category:"database", color:"#336791", sector:[] },
-    { name:"Redis", category:"database", color:"#C6302B", sector:[] },
-    { name:"SQLite", category:"database", color:"#49A6dE", sector:[] },
+const allTechs = [
+    { name:"C", category:"language", color:"#7F8B99" },
+    { name:"C++", category:"language", color:"#5C8DbC" },
+    { name:"C#", category:"language", color:"#A179DC" },
+    { name:"Dart", category:"language", color:"#00D2B8" },
+    { name:"Go", category:"language", color:"#00ACD7" },
+    { name:"Haskell", category:"language", color:"#5E5086" },
+    { name:"HTML-CSS", category:"language", color:"#F16529" },
+    { name:"Java", category:"language", color:"#C74634" },
+    { name:"JavaScript", category:"language", color:"#F7DF1E" },
+    { name:"Kotlin", category:"language", color:"#806EE3" },
+    { name:"MatLab", category:"language", color:"#1A6CFF" },
+    { name:"Objective-C", category:"language", color:"#F1592A" },
+    { name:"Perl", category:"language", color:"#3A3C5B" },
+    { name:"PHP", category:"language", color:"#6181B6" },
+    { name:"Python", category:"language", color:"#387EB8" },
+    { name:"R", category:"language", color:"#2165B6" },
+    { name:"Ruby", category:"language", color:"#D11C0C" },
+    { name:"Rust", category:"language", color:"#000000" },
+    { name:"Scala", category:"language", color:"#FF0000" },
+    { name:"Swift", category:"language", color:"#F98039" },
+    { name:"TypeScript", category:"language", color:"#007ACC" },
+    { name:"Visual Basic", category:"language", color:"#004E8C" },
+    { name:"ASP.NET", category:"framework", color:"#6D409C" }, 
+    { name:"Angular", category:"framework", color:"#E23237" },
+    { name:"Bootstrap", category:"framework", color:"#563D7C" },
+    { name:"Django", category:"framework", color:"#2BA977" },
+    { name:"Ember", category:"framework", color:"#E24B31" },
+    { name:"Flask", category:"framework", color:"#000000" },
+    { name:"Laravel", category:"framework", color:"#FF2D20" },
+    { name:"Node.js", category:"framework", color:"#539E43" },
+    { name:"Rails", category:"framework", color:"#CC0000" },
+    { name:"React", category:"framework", color:"#00D8FF" },
+    { name:"Spring", category:"framework", color:"#6DB33F" },
+    { name:"Vue.js", category:"framework", color:"#41B883" },
+    { name:"MS SQL Server", category:"database", color:"#D11C0C" },
+    { name:"MongoDB", category:"database", color:"#10AA50" },
+    { name:"MySQL", category:"database", color:"#00546B" },
+    { name:"PostGreSQL", category:"database", color:"#336791" },
+    { name:"Redis", category:"database", color:"#C6302B" },
+    { name:"SQLite", category:"database", color:"#49A6dE" },
 ];
 
-(async () => {
+(async () => {       
     // get city data
     const resp = await fetch("/retrieveData");
     const citiesData = await resp.json();
@@ -894,15 +1061,17 @@ const langFull = [
     // console.log(citiesData.map((obj) => obj.cityName).sort());
     
     // populate page with menus & visuals
+    const defaultCity = "Corvallis";
+    
     let mapProjection = createMap();
     createCities(mapProjection, citiesData);   
     createMapResetBtn();
     createTechListCats();
     createTechListSubLists(citiesData);
     createCityDataArea();
-    const defaultCity = "Corvallis"
     showCityData(defaultCity, citiesData);
     createNationalCharts();
+    createInfoModals();
 
     // initialize Bootstrap opt-ins
     $(document).ready( () => {
