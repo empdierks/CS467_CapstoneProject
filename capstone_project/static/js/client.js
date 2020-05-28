@@ -177,8 +177,6 @@ let createCities = (projection, citiesData) => {
         { city:"Tampa", state:"Florida", lat:27.94752, lon:-82.45843, hub:0 },
         { city:"Washington, D.C.", state:"District of Columbia", lat:38.89511, lon:-77.03637, hub:1 },
     ];
-    
-    // console.log(cities.map((obj) => obj.city));          // TODO -- DELETE ME
 
     // create city circles
     let cityHoverT = 200;
@@ -514,7 +512,7 @@ let createCityDataArea = () => {
 };
 
 
-// displays contents of explore-by-location area incl. redrawing donut chart
+// displays contents of explore-by-location area incl. salaries & tech pop donut chart
 let showCityData = (cityName, citiesData) => {     
     resetMap();
     d3.selectAll("#ul-lang-sublist .sublist-item")
@@ -705,10 +703,15 @@ let updateTechPopChart = (techCat) => {
                 .attr("text-anchor", "middle")
                 .text((d) => d.data.count);
         
-        // legend
-        let techPopLegendItems = d3.select("#ul-tech-pop-legend").selectAll("i")
-            .data(topTechs, (d) => d.name);     // rebind data
-        techPopLegendItems.enter()
+        // legend       
+        let techPopLegendItems = d3.select("#ul-tech-pop-legend");
+        techPopLegendItems.selectAll("i")        // completely remove existing icons & labels so recreated in same order as wedges
+            .remove();
+        techPopLegendItems.selectAll("span")
+            .remove();        
+        techPopLegendItems.selectAll("i")
+            .data(topTechs)
+            .enter()
             .append("i")
                 .attr("class", "list-group-item border-0 fas fa-square legend-item legend-square")
                 .style("color", (d) => allTechs.find((obj) => obj.name === d.name).color)
@@ -716,7 +719,6 @@ let updateTechPopChart = (techCat) => {
                 .classed("fas fa-square", false)
                 .attr("class", "legend-text")
                 .html((d) => "&nbsp;&nbsp;" + `${d.name}`);
-        techPopLegendItems.exit().remove();
     }    
 };
 
@@ -907,7 +909,7 @@ let createNationalCharts = () => {
 };
 
 
-// creates 2x modals with add'l explanation about data sources, etc. -- text triggers created in .html file
+// creates 2x modals with add'l explanation about data sources, etc. -- triggers created in .html file
 let createInfoModals = () => {
     // Explore-by-Location modal
     let eblModalContent = d3.select("#explore-by-loc")
@@ -1052,17 +1054,17 @@ const allTechs = [
     { name:"SQLite", category:"database", color:"#49A6dE" },
 ];
 
+
 (async () => {       
     // get city data
     const resp = await fetch("/retrieveData");
     const citiesData = await resp.json();
-    // console.log(citiesData);
+    console.log(citiesData);
     // console.log(citiesData[0]);
-    // console.log(citiesData.map((obj) => obj.cityName).sort());
+    console.log(citiesData.map((obj) => obj.cityName).sort());
     
     // populate page with menus & visuals
     const defaultCity = "Corvallis";
-    
     let mapProjection = createMap();
     createCities(mapProjection, citiesData);   
     createMapResetBtn();
@@ -1075,7 +1077,6 @@ const allTechs = [
 
     // initialize Bootstrap opt-ins
     $(document).ready( () => {
-        $('[data-toggle="tooltip"]').tooltip({trigger:"hover"});
-        $('[data-toggle="popover"]').popover();    
+        $('[data-toggle="tooltip"]').tooltip({trigger:"hover"});   
     });
 })();
