@@ -3,11 +3,12 @@ from bs4 import BeautifulSoup
 
 
 def get_salaries(url):
-    page = requests.get(url)
-    soup = BeautifulSoup(page.content, 'html.parser')
-    median = False
 
     try:
+        page = requests.get(url)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        median = False
+
         salary_table = soup.find('table', {"class":"table-chart"})
         for row in salary_table.findAll('td'):
             if median == True:
@@ -24,7 +25,7 @@ def get_salaries(url):
 def get_city_salary_nums():
 
     query_locations = [('Ann Arbor','ann-arbor-mi'),('Atlanta','atlanta-ga'), ('Austin','austin-tx'), ('Baltimore','baltimore-md'),('Boston','boston-ma'), ('Boulder','boulder-co'),
-    ('Charlotte','charlotte-nc'), ('Charlottesville','charlottesville-va'), ('Chicago','chicago-il'), ('Cincinatti','cincinatti-oh'),('Corvallis','corvallis-or'), ('Dallas','dallas-tx'),
+    ('Charlotte','charlotte-nc'), ('Charlottesville','charlottesville-va'), ('Chicago','chicago-il'), ('Cincinnati','cincinnati-oh'),('Corvallis','corvallis-or'), ('Dallas','dallas-tx'),
     ('Detroit','detroit-mi'),('Fort Collins','fort-collins-co'), ('Hartford','hartford-ct'), ('Houston','houston-tx'), ('Ithaca','ithaca-ny'), ('Las Vegas','las-vegas-nv'),
     ('Los Angeles','los-angeles-ca'), ('Madison','madison-wi'), ('Miami','miami-fl'), ('Minneapolis','minneapolis-mn'),('New Haven','new-haven-ct'),('New York City','new-york-city-ny'),
     ('Orlando', 'orlando-fl'), ('Philadelphia','philadelphia-pa'), ('Phoenix','phoenix-az'), ('Pittsburgh','pittsburgh-pa'), ('Portland','portland-or'), ('Raleigh','raleigh-nc'),
@@ -41,7 +42,7 @@ def get_city_salary_nums():
     #query_locations = [('Ann Arbor','ann-arbor-mi'),('Atlanta','atlanta-ga'), ('Austin','austin-tx')]
     #query_jobs = [('dbaExp','/alternate/dba-experienced')]
 
-
+    #[{city_name:{sweEntry: x, sweExp: x, sweSenior: x,...}}, ]
     completed_list = []
 
     for city in query_locations:
