@@ -51,16 +51,16 @@ def get_city_language_nums():
 	('HTML-CSS','HTML'), ('Java', 'java'), ('JavaScript','Javascript'),('Kotlin', 'Kotlin'),('MatLab','MatLab'),
 	('Objective-C', 'objective-c'), ('Perl', 'Perl'), ('PHP', 'PHP'),('Python','Python'),('R', 'R'), ('Ruby', 'Ruby'),
 	('Rust', 'Rust'), ('Scala', 'Scala'), ('Swift','Swift'),('TypeScript','TypeScript'),('Visual Basic','Visual-Basic'),
-	('ASP.NET','ASP.NET'),('Angular','Angular'),('BootStrap','bootstrap'),('Django','django'),('Ember','ember'),
+	('ASP.NET','ASP.NET'),('Angular','Angular'),('Bootstrap','bootstrap'),('Django','django'),('Ember','ember'),
 	('Flask','flask'),('Laravel','laravel'),('Node.js','node.js'),('Rails','Ruby-On-Rails'),('React', 'React'),('Spring','spring'),
 	('Vue.js','Vue'),('MS SQL Server','ms-sql-server'),('MongoDB','mongoDB'),('MySQL','MySQL'),('PostGreSQL','postGreSQL'),
 	('Redis','redis'),('SQLite','sqlite')]
 
 
 	locations = ['Ann Arbor', 'Atlanta', 'Austin', 'Baltimore', 'Boston', 'Boulder', 'Charlotte', 'Charlottesville', 'Chicago', 'Cincinnati',
-	'Corvallis', 'Dallas', 'Detroit','Fort Collins', 'Hartford','Houston', 'Ithaca', 'Las Vegas', 'Los Angeles', 'Madison', 'Miami', 'Minneapolis',
+	'Corvallis', 'Dallas', 'Detroit','Fort Collins', 'Hartford', 'Houston', 'Ithaca', 'Las Vegas', 'Los Angeles', 'Madison', 'Miami', 'Minneapolis',
 	'New Haven','New York City', 'Orlando', 'Philadelphia', 'Phoenix', 'Pittsburgh', 'Portland', 'Raleigh', 'Riverside', 'Sacramento', 'San Antonio',
-	'San Diego', 'San Francisco', 'San Jose', 'Seattle', 'Saint Louis', 'Tampa', 'Washington DC']
+	'San Diego', 'San Francisco', 'San Jose', 'Seattle', 'St. Louis', 'Tampa', 'Washington, D.C.']
 
 	################################################
 	# Testing subset of data

@@ -30,7 +30,7 @@ def get_city_salary_nums():
     ('Los Angeles','los-angeles-ca'), ('Madison','madison-wi'), ('Miami','miami-fl'), ('Minneapolis','minneapolis-mn'),('New Haven','new-haven-ct'),('New York City','new-york-city-ny'),
     ('Orlando', 'orlando-fl'), ('Philadelphia','philadelphia-pa'), ('Phoenix','phoenix-az'), ('Pittsburgh','pittsburgh-pa'), ('Portland','portland-or'), ('Raleigh','raleigh-nc'),
     ('Riverside','riverside-ca'), ('Sacramento','sacramento-ca'), ('San Antonio','san-antonio-tx'),('San Diego','san-diego-ca'), ('San Francisco','san-francisco-ca'), ('San Jose','san-jose-ca'),
-    ('Seattle','seattle-wa'), ('Saint Louis','saint-louis-mo'), ('Tampa','tampa-fl'), ('Washington DC','washington-dc')]
+    ('Seattle','seattle-wa'), ('St. Louis','saint-louis-mo'), ('Tampa','tampa-fl'), ('Washington, D.C.','washington-dc')]
 
     query_jobs = [('sweEntry', '/benchmark/software-engineer-i'), ('sweExp','/benchmark/software-engineer-iii'), ('sweSenior','/benchmark/software-engineer-v'),('webdevEntry',
     '/alternate/web-applications-developer-entry'),('webdevExp','/alternate/web-applications-developer-experienced'), ('webdevSenior','/alternate/web-applications-developer-senior'),

@@ -13,7 +13,7 @@ def combine_results():
 	('HTML-CSS','HTML'), ('Java', 'java'), ('JavaScript','Javascript'),('Kotlin', 'Kotlin'),('MatLab','MatLab'),
 	('Objective-C', 'objective-c'), ('Perl', 'Perl'), ('PHP', 'PHP'),('Python','Python'),('R', 'R'), ('Ruby', 'Ruby'),
 	('Rust', 'Rust'), ('Scala', 'Scala'), ('Swift','Swift'),('TypeScript','TypeScript'),('Visual Basic','Visual-Basic'),
-	('ASP.NET','ASP.NET'),('Angular','Angular'),('BootStrap','bootstrap'),('Django','django'),('Ember','ember'),
+	('ASP.NET','ASP.NET'),('Angular','Angular'),('Bootstrap','bootstrap'),('Django','django'),('Ember','ember'),
 	('Flask','flask'),('Laravel','laravel'),('Node.js','node.js'),('Rails','Ruby-On-Rails'),('React', 'React'),('Spring','spring'),
 	('Vue.js','Vue'),('MS SQL Server','ms-sql-server'),('MongoDB','mongoDB'),('MySQL','MySQL'),('PostGreSQL','postGreSQL'),
 	('Redis','redis'),('SQLite','sqlite')]

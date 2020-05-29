@@ -14,7 +14,7 @@ def post_models(request):
     ('HTML-CSS','html_css'), ('Java', 'java'), ('JavaScript','javaScript'),('Kotlin', 'kotlin'),('MatLab','matLab'),
     ('Objective-C', 'obj_c'), ('Perl', 'perl'), ('PHP', 'php'),('Python','python'),('R', 'r'), ('Ruby', 'ruby'),
     ('Rust', 'rust'), ('Scala', 'scala'), ('Swift','swift'),('TypeScript','typeScript'),('Visual Basic','visual_basic'),
-    ('ASP.NET','asp_net'),('Angular','angular'),('BootStrap','bootstrap'),('Django','django'),('Ember','ember'),
+    ('ASP.NET','asp_net'),('Angular','angular'),('Bootstrap','bootstrap'),('Django','django'),('Ember','ember'),
     ('Flask','flask'),('Laravel','laravel'),('Node.js','node_js'),('Rails','rails'),('React', 'react'),('Spring','spring'),
     ('Vue.js','vue_js'),('MS SQL Server','ms_sql'),('MongoDB','mongoDB'),('MySQL','my_sql'),('PostGreSQL','postGreSql'),
     ('Redis','redis'),('SQLite','sqlite')]

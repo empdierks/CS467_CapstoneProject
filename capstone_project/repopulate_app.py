@@ -18,7 +18,7 @@ def populate():
 	city_actual = {'Ann Arbor': 0.942 , 'Atlanta':1.025, 'Austin':0.925, 'Baltimore':1.211, 'Boston':1.395 ,'Boulder':1.101 , 'Charlotte':0.965, 'Charlottesville':1.044, 'Chicago':1.167, 'Cincinnati':0.868,
 	'Corvallis':1.038, 'Dallas':1.017, 'Detroit':0.979, 'Fort Collins':1.194,'Hartford':1.254,'Houston':0.846,'Ithaca':0.956,'Las Vegas':0.981, 'Los Angeles':1.426,'Madison':1.001,'Miami':1.147,
 	'Minneapolis':1.127, 'New Haven':1.268, 'New York City':1.830,'Orlando':1.030, 'Philadelphia':1.251,'Phoenix':1.204,'Pittsburgh':0.968,'Portland':1.108,'Raleigh':0.930,'Riverside':1.132,'Sacramento':1.205,
-	'San Antonio':0.922,'San Diego':1.386,'San Francisco':1.625,'San Jose':1.514,'Seattle':1.188,'Saint Louis':0.968, 'Tampa':0.925, 'Washington DC':1.596}
+	'San Antonio':0.922,'San Diego':1.386,'San Francisco':1.625,'San Jose':1.514,'Seattle':1.188,'St. Louis':0.968, 'Tampa':0.925, 'Washington, D.C.':1.596}
 
 	combined_object = combine.combine_results()
 
@@ -79,7 +79,7 @@ def populate():
 			fake_kotlin = 0
 
 		try:
-			fake_matLab = combined_object[c]["langCounts"]["Matlab"]
+			fake_matLab = combined_object[c]["langCounts"]["MatLab"]
 		except:
 			fake_matLab = 0
 
@@ -194,7 +194,7 @@ def populate():
 			fake_spring = 0
 
 		try:
-			fake_vue_js = combined_object[c]["langCounts"]["Vue"]
+			fake_vue_js = combined_object[c]["langCounts"]["Vue.js"]
 		except:
 			fake_vue_js = 0
 
