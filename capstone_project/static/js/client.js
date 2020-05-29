@@ -331,7 +331,7 @@ let showTopCities = (techName, citiesData) => {
             .classed("tech-hub", false)
             .attr("visibility", "visible")
             .attr("fill", langColor) 
-            .attr("opacity", 0.75)
+            .attr("opacity", "0.75")
             .attr("data-original-title", (d,i) => {                                  // change tooltip to include job counts for each city              
                 let topCity = topCities.find((c) => c.cityName === d.city);
                 return `${topCity.cityName}<br /><b>${topCity.langCount}</b> jobs`;  // use html in tooltip for linebreak
@@ -532,7 +532,7 @@ let showCityData = (cityName, citiesData) => {
             .duration(bubbleTransT)
             .attr("r", defaultR * 2)
         .transition()
-            .duration(bubbleTransT)
+            .duration(bubbleTransT + 100)
             .attr("r", defaultR)
             .style("stroke-dasharray", "2,2")
         // highlight corresponding state
@@ -612,6 +612,7 @@ let updateSalaries = (level) => {
 
 
 // updates tech pop donut chart with tech counts from specified category (or from all categories if passed empty string)
+    // transition animation from: http://www.adeveloperdiary.com/d3-js/create-a-simple-donut-chart-using-d3-js/
 let updateTechPopChart = (techCat) => {    
     // get langCounts via city data object bound to header
     let langCounts = d3.select("#city-data-header")
@@ -673,14 +674,13 @@ let updateTechPopChart = (techCat) => {
         let techPopSvg = d3.select("#svg-tech-pop-chart");
         techPopSvg.selectAll("path")            // completely remove existing paths (b/c enter-update-exit hangs on to some old wedges)
             .remove();
-        techPopSvg.selectAll("path")            // reselect to create new
+        techPopSvg.selectAll("path")
             .data(donutAngles)
             .enter()
             .append("path")
                 .attr("d", donutArc)
                 .attr("class", "donut-wedge-path")
                 .attr("fill", (d) => allTechs.find((obj) => obj.name === d.data.name).color)
-                // animation from: http://www.adeveloperdiary.com/d3-js/create-a-simple-donut-chart-using-d3-js/
                 .transition()
                     .duration(donutTransT)
                     .attrTween("d", (d) => {
@@ -705,7 +705,7 @@ let updateTechPopChart = (techCat) => {
         
         // legend       
         let techPopLegendItems = d3.select("#ul-tech-pop-legend");
-        techPopLegendItems.selectAll("i")        // completely remove existing icons & labels so recreated in same order as wedges
+        techPopLegendItems.selectAll("i")        // completely remove existing labels so recreated in same order as wedges (by pop)
             .remove();
         techPopLegendItems.selectAll("span")
             .remove();        
@@ -723,7 +723,7 @@ let updateTechPopChart = (techCat) => {
 };
 
 
-// creates national annual rankings charts
+// creates static national annual rankings charts
 let createNationalCharts = () => {   
     const stackOverflowData = [
         { name:"JavaScript", rankings:[[2017,1], [2018,1], [2019,1]] },
@@ -911,7 +911,7 @@ let createNationalCharts = () => {
 
 // creates 2x modals with add'l explanation about data sources, etc. -- triggers created in .html file
 let createInfoModals = () => {
-    // Explore-by-Location modal
+    // explore-by-location modal
     let eblModalContent = d3.select("#explore-by-loc")
         .append("div")
             .attr("class", "modal fade")
@@ -963,7 +963,7 @@ let createInfoModals = () => {
                Fewer technologies may be appear in the chart if job counts of zero are numerous."
         );
                              
-    // Explore-by-Technology modal
+    // explore-by-technology modal
     let ebtModalContent = d3.select("#explore-by-tech")
         .append("div")
             .attr("class", "modal fade")
@@ -1053,7 +1053,7 @@ const allTechs = [
     { name:"Redis", category:"database", color:"#C6302B" },
     { name:"SQLite", category:"database", color:"#49A6dE" },
 ];
-
+Object.freeze(allTechs);
 
 (async () => {       
     // get city data
