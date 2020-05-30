@@ -22,21 +22,22 @@ def populate():
 
 	for c in city_actual:
 		#create City Table
-		cityName = City.objects.update_or_create(city_name = c, col_index = city_actual[c])[0]
+		cityName = City.objects.update_or_create(city_name = c, defaults={'col_index': city_actual[c]})[0]
 
 		#create fake Salary table
-		fake_sweE = fake.random_int(60000, 70000)
-		fake_sweM = fake.random_int(70000, 80000)
-		fake_sweS = fake.random_int(80000, 100000)
-		fake_wdE = fake.random_int(60000, 70000)
-		fake_wdM = fake.random_int(70000, 80000)
-		fake_wdS = fake.random_int(80000, 100000)
-		fake_dbaE = fake.random_int(60000, 70000)
-		fake_dbaM = fake.random_int(70000, 80000)
-		fake_dbaS = fake.random_int(80000, 100000)
+		#fake_sweE = fake.random_int(60000, 70000)
+		#fake_sweM = fake.random_int(70000, 80000)
+		#fake_sweS = fake.random_int(80000, 100000)
+		#fake_wdE = fake.random_int(60000, 70000)
+		#fake_wdM = fake.random_int(70000, 80000)
+		#fake_wdS = fake.random_int(80000, 100000)
+		#fake_dbaE = fake.random_int(60000, 70000)
+		#fake_dbaM = fake.random_int(70000, 80000)
+		#fake_dbaS = fake.random_int(80000, 100000)
 
-		salaries = Salary.objects.update_or_create(city=cityName, sweEnt=fake_sweE, sweMid =fake_sweM, sweSen = fake_sweS, webEnt=fake_wdE, webMid=fake_wdM, webSen=fake_wdS,
-		dbaEnt=fake_dbaE, dbaMid=fake_dbaM, dbaSen=fake_dbaS)[0]
+		#salaries = Salary.objects.update_or_create(city=cityName, sweEnt=fake_sweE, sweMid =fake_sweM, sweSen = fake_sweS, webEnt=fake_wdE, webMid=fake_wdM, webSen=fake_wdS,
+		#dbaEnt=fake_dbaE, dbaMid=fake_dbaM, dbaSen=fake_dbaS)[0]
+
 
 		#create fake Languages table
 		fake_c = fake.random_int(0, 200)
@@ -80,13 +81,14 @@ def populate():
 		fake_redis = fake.random_int(0, 200)
 		fake_sqlite = fake.random_int(0, 200)
 
-		lang = Languages.objects.update_or_create(city=cityName, c=fake_c, c_plus = fake_cplus, c_sharp = fake_csharp,
-        dart = fake_dart, go=fake_go, haskell=fake_haskell, html_css= fake_html, java=fake_java, javaScript=fake_javascript,
-        kotlin=fake_kotlin, matLab=fake_matLab, obj_c=fake_matLab, perl =fake_perl, php=fake_php ,python =fake_python, r=fake_r,
-        ruby=fake_ruby, rust=fake_rust, scala=fake_scala, swift=fake_swift, typeScript=fake_typeScript, visual_basic=fake_visual_basic,
-        asp_net = fake_asp_net, angular=fake_angular, bootstrap=fake_bootstrap, django=fake_django, ember=fake_ember, flask=fake_flask,
-        laravel = fake_laravel, node_js=fake_node_js, rails=fake_rails, react=fake_react, spring=fake_spring, vue_js=fake_vue_js, ms_sql=fake_ms_sql,
-        mongoDB=fake_mongoDB, my_sql=fake_my_sql, postGreSql=fake_postGreSql, redis=fake_redis, sqlite=fake_sqlite)[0]
+		Languages.objects.update_or_create(city=cityName, defaults = {'c':fake_c, 'c_plus': fake_cplus, 'c_sharp': fake_csharp,
+        'dart': fake_dart, 'go': fake_go, 'haskell': fake_haskell, 'html_css': fake_html, 'java':fake_java, 'javaScript':fake_javascript,
+        'kotlin':fake_kotlin, 'matLab':fake_matLab, 'obj_c':fake_matLab, 'perl': fake_perl, 'php':fake_php , 'python': fake_python, 'r':fake_r,
+        'ruby':fake_ruby, 'rust':fake_rust, 'scala':fake_scala, 'swift':fake_swift, 'typeScript':fake_typeScript, 'visual_basic': fake_visual_basic,
+        'asp_net': fake_asp_net, 'angular':fake_angular, 'bootstrap':fake_bootstrap, 'django':fake_django, 'ember':fake_ember, 'flask': fake_flask,
+        'laravel': fake_laravel, 'node_js':fake_node_js, 'rails':fake_rails, 'react':fake_react, 'spring':fake_spring, 'vue_js':fake_vue_js, 'ms_sql':fake_ms_sql,
+        'mongoDB':fake_mongoDB, 'my_sql':fake_my_sql, 'postGreSql':fake_postGreSql, 'redis':fake_redis, 'sqlite':fake_sqlite})[0]
+
 
 if __name__ == '__main__':
 	print("populating script!")
