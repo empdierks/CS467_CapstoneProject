@@ -27,7 +27,7 @@ def get_city_salary_nums():
     query_locations = [('Ann Arbor','ann-arbor-mi'),('Atlanta','atlanta-ga'), ('Austin','austin-tx'), ('Baltimore','baltimore-md'),('Boston','boston-ma'), ('Boulder','boulder-co'),
     ('Charlotte','charlotte-nc'), ('Charlottesville','charlottesville-va'), ('Chicago','chicago-il'), ('Cincinnati','cincinnati-oh'),('Corvallis','corvallis-or'), ('Dallas','dallas-tx'),
     ('Detroit','detroit-mi'),('Fort Collins','fort-collins-co'), ('Hartford','hartford-ct'), ('Houston','houston-tx'), ('Ithaca','ithaca-ny'), ('Las Vegas','las-vegas-nv'),
-    ('Los Angeles','los-angeles-ca'), ('Madison','madison-wi'), ('Miami','miami-fl'), ('Minneapolis','minneapolis-mn'),('New Haven','new-haven-ct'),('New York City','new-york-city-ny'),
+    ('Los Angeles','los-angeles-ca'), ('Madison','madison-wi'), ('Miami','miami-fl'), ('Minneapolis','minneapolis-mn'),('New Haven','new-haven-ct'),('New York City','new-york-ny'),
     ('Orlando', 'orlando-fl'), ('Philadelphia','philadelphia-pa'), ('Phoenix','phoenix-az'), ('Pittsburgh','pittsburgh-pa'), ('Portland','portland-or'), ('Raleigh','raleigh-nc'),
     ('Riverside','riverside-ca'), ('Sacramento','sacramento-ca'), ('San Antonio','san-antonio-tx'),('San Diego','san-diego-ca'), ('San Francisco','san-francisco-ca'), ('San Jose','san-jose-ca'),
     ('Seattle','seattle-wa'), ('St. Louis','saint-louis-mo'), ('Tampa','tampa-fl'), ('Washington, D.C.','washington-dc')]
