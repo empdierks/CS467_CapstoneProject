@@ -72,7 +72,7 @@ def populate():
 			fake_kotlin = 0
 
 		try:
-			fake_matLab = combined_object[c]["langCounts"]["Matlab"]
+			fake_matLab = combined_object[c]["langCounts"]["MatLab"]
 		except:
 			fake_matLab = 0
 
@@ -187,7 +187,7 @@ def populate():
 			fake_spring = 0
 
 		try:
-			fake_vue_js = combined_object[c]["langCounts"]["Vue"]
+			fake_vue_js = combined_object[c]["langCounts"]["Vue.js"]
 		except:
 			fake_vue_js = 0
 
@@ -222,6 +222,7 @@ def populate():
 			fake_sqlite = 0
 
 
+
 		#############################################################################
 		# # Testing subset of data
 		#############################################################################
@@ -231,7 +232,7 @@ def populate():
 
 		Languages.objects.update_or_create(city=cityName, defaults = {'c':fake_c, 'c_plus': fake_cplus, 'c_sharp': fake_csharp,
         'dart': fake_dart, 'go': fake_go, 'haskell': fake_haskell, 'html_css': fake_html, 'java':fake_java, 'javaScript':fake_javascript,
-        'kotlin':fake_kotlin, 'matLab':fake_matLab, 'obj_c':fake_matLab, 'perl': fake_perl, 'php':fake_php , 'python': fake_python, 'r':fake_r,
+        'kotlin':fake_kotlin, 'matLab':fake_matLab, 'obj_c':fake_obj_c, 'perl': fake_perl, 'php':fake_php , 'python': fake_python, 'r':fake_r,
         'ruby':fake_ruby, 'rust':fake_rust, 'scala':fake_scala, 'swift':fake_swift, 'typeScript':fake_typeScript, 'visual_basic': fake_visual_basic,
         'asp_net': fake_asp_net, 'angular':fake_angular, 'bootstrap':fake_bootstrap, 'django':fake_django, 'ember':fake_ember, 'flask': fake_flask,
         'laravel': fake_laravel, 'node_js':fake_node_js, 'rails':fake_rails, 'react':fake_react, 'spring':fake_spring, 'vue_js':fake_vue_js, 'ms_sql':fake_ms_sql,
