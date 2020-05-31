@@ -492,7 +492,7 @@ let createCityDataArea = () => {
     const chartW = 300, chartH = 300;
     techChartRow.append("div")
             .attr("id", "div-tech-pop-chart")
-            .attr("class", "col-sm-6")
+            .attr("class", "col-6")
         .append("svg")
             .attr("id", "svg-tech-pop-chart")
             .attr("preserveAspectRatio", "xMinYMin meet")                           // allows responsive resize of svg
@@ -501,7 +501,7 @@ let createCityDataArea = () => {
    // div container for legend
     techChartRow.append("div")
             .attr("id", "div-tech-pop-legend")
-            .attr("class", "col-sm-4")
+            .attr("class", "col-4")
         .append("ul")
             .attr("id", "ul-tech-pop-legend")
             .attr("class", "list-group");

@@ -2,7 +2,6 @@
 
 .header {
     padding: 0.5em 0 0.5em 0;
-    /* background-color: #f2f2f2; */
     background-color: #00ACD7;
     color: white;
     letter-spacing: .3em;
@@ -37,8 +36,6 @@ a:link, a:visited, a:hover, a:active {
 .btn-secondary {
     background-color: #B3B3B3 !important; 
     border-color: #B3B3B3 !important; 
-    /* background-color: #686868 !important;  */
-    /* border-color: #686868 !important;      */
 }
 
 .tooltip-inner {
@@ -69,7 +66,7 @@ a:link, a:visited, a:hover, a:active {
     /* negative margin to compensate for error msg on top */
     margin-top: -3.5em;
     /* forces resize of entire map    */
-    padding: 0 2.6em;
+    padding: 0 5%;
 }
 
 .state-path {   
@@ -99,7 +96,6 @@ a:link, a:visited, a:hover, a:active {
 .city-circle.tech-hub {
     fill: #00ACD7 !important; 
     stroke: #33D6FF !important;
-    /* change back to 5 if remove paint-order above */
     stroke-width: 6 !important; 
     stroke-dasharray: 0 !important;  
 }
@@ -116,7 +112,7 @@ a:link, a:visited, a:hover, a:active {
 }
 
 #master-reset-btn {
-    margin-top: -3.5em;
+    margin-top: -8%;
     margin-right: 2em;
     padding: 0.25em 1em;
     font-size: 0.8em;
@@ -147,7 +143,6 @@ a:link, a:visited, a:hover, a:active {
 }
 .filter-button {
     font-size: 0.75em !important;
-    /* letter-spacing: 0.06em; */
 }
 .icon-button {
     padding: 0.25em 1.5em !important;   
@@ -230,7 +225,6 @@ a:link, a:visited, a:hover, a:active {
 .lang-list-item {
     list-style-type: none;                            
     text-transform: capitalize;
-    /* border: none */
 }
 
 #ul-lang-sublist {
